@@ -1,10 +1,12 @@
 import os
+import logging
 from flask import Blueprint, jsonify, g
 from app.auth.utils import token_required
 from app.models import User
 from app.email.service import send_email
 
 auth_bp = Blueprint('auth', __name__)
+logger = logging.getLogger("haven.auth")
 
 @auth_bp.route('/sync', methods=['POST'])
 @token_required
@@ -36,7 +38,8 @@ def sync_user():
                 tags=[{"name": "type", "value": "welcome"}]
             )
         return jsonify({'message': 'User created', 'role': 'client'})
-    
+
+    logger.info("User already exists, skipping welcome email uid=%s", uid)
     return jsonify({
         'message': 'User synced', 
         'uid': user.uid,

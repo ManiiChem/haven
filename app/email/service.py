@@ -1,4 +1,5 @@
 import os
+import logging
 from datetime import datetime
 from pathlib import Path
 
@@ -6,6 +7,13 @@ import requests
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
+logger = logging.getLogger("haven.email")
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
 
 _env = Environment(
     loader=FileSystemLoader(TEMPLATE_DIR),
@@ -41,6 +49,7 @@ def send_email(to_email, subject, template_name, context, tags=None):
     html = render_template(template_name, merged)
 
     if not _mail_enabled():
+        logger.info("Email skipped (MAIL_ENABLED=false) to=%s subject=%s", to_email, subject)
         return {"status": "skipped", "reason": "MAIL_ENABLED is false", "to": to_email}
 
     api_key = os.getenv("RESEND_API_KEY")
@@ -48,6 +57,7 @@ def send_email(to_email, subject, template_name, context, tags=None):
     reply_to = os.getenv("MAIL_REPLY_TO")
 
     if not api_key or not mail_from:
+        logger.warning("Email skipped (missing config) to=%s subject=%s", to_email, subject)
         return {"status": "skipped", "reason": "Missing RESEND_API_KEY or MAIL_FROM", "to": to_email}
 
     payload = {
@@ -72,5 +82,8 @@ def send_email(to_email, subject, template_name, context, tags=None):
         timeout=15
     )
     if not resp.ok:
+        logger.error("Email error to=%s subject=%s status=%s body=%s", to_email, subject, resp.status_code, resp.text)
         return {"status": "error", "status_code": resp.status_code, "body": resp.text}
-    return {"status": "sent", "id": resp.json().get("id")}
+    message_id = resp.json().get("id")
+    logger.info("Email sent to=%s subject=%s id=%s", to_email, subject, message_id)
+    return {"status": "sent", "id": message_id}
