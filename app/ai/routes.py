@@ -1,7 +1,9 @@
 import os
 import json
-from datetime import datetime
-from flask import request, jsonify, g
+from datetime import datetime, timedelta
+from urllib.parse import urlencode
+from flask import request, jsonify, g, Response
+from google.cloud import firestore
 from app.auth.utils import token_required
 from app.models import User, ChatSession
 
@@ -45,6 +47,96 @@ def _collect_themes(sessions):
             counts[item] = counts.get(item, 0) + 1
     top = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:3]
     return [name for name, _ in top]
+
+def _parse_time_string(time_str):
+    if not time_str:
+        return None
+    cleaned = time_str.strip()
+    for fmt in ("%I:%M %p", "%I %p"):
+        try:
+            return datetime.strptime(cleaned, fmt).time()
+        except ValueError:
+            continue
+    return None
+
+def _next_occurrence(day_name, time_str):
+    if not day_name:
+        return None
+    weekday_map = {
+        "monday": 0,
+        "tuesday": 1,
+        "wednesday": 2,
+        "thursday": 3,
+        "friday": 4,
+        "saturday": 5,
+        "sunday": 6
+    }
+    target = weekday_map.get(day_name.strip().lower())
+    if target is None:
+        return None
+    now = datetime.now()
+    session_time = _parse_time_string(time_str) or now.time()
+    days_ahead = (target - now.weekday() + 7) % 7
+    if days_ahead == 0 and session_time <= now.time():
+        days_ahead = 7
+    session_date = now.date() + timedelta(days=days_ahead)
+    return datetime.combine(session_date, session_time)
+
+def _build_calendar_link(booking_id):
+    if not booking_id:
+        return None
+    app_base_url = os.getenv("APP_BASE_URL", "http://localhost:5000")
+    return f"{app_base_url}/api/chat/session/calendar/{booking_id}.ics"
+
+def _build_ics_event(booking_id, title, start_dt, end_dt, description):
+    dtstamp = datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')
+    dtstart = start_dt.strftime('%Y%m%dT%H%M%S')
+    dtend = end_dt.strftime('%Y%m%dT%H%M%S')
+    safe_title = (title or "Haven Session").replace("\n", " ").strip()
+    safe_desc = (description or "").replace("\n", " ").strip()
+    lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Haven//EN",
+        "CALSCALE:GREGORIAN",
+        "BEGIN:VEVENT",
+        f"UID:{booking_id}@haven",
+        f"DTSTAMP:{dtstamp}",
+        f"DTSTART:{dtstart}",
+        f"DTEND:{dtend}",
+        f"SUMMARY:{safe_title}",
+        f"DESCRIPTION:{safe_desc}",
+        "END:VEVENT",
+        "END:VCALENDAR"
+    ]
+    return "\r\n".join(lines)
+
+def _session_summary_payload(session_data, session_id=None):
+    group_id = session_data.get('matched_group_id')
+    group_def = GroupMatcher.ARCHETYPE_GROUPS.get(group_id, {}) if group_id else {}
+    group_name = session_data.get('matched_group_name') or group_def.get('name')
+
+    session_date = session_data.get('booking_session_date') or ''
+    session_time = session_data.get('booking_session_time') or ''
+    calendar_url = _build_calendar_link(session_data.get('booking_id'))
+
+    return {
+        'session_id': session_id,
+        'group': {
+            'id': group_id,
+            'name': group_name,
+            'description': group_def.get('description'),
+            'capacity': group_def.get('capacity')
+        },
+        'session_date': session_date,
+        'session_time': session_time,
+        'calendar_url': calendar_url,
+        'stressors': session_data.get('stressors', []),
+        'mood_level': session_data.get('mood_level'),
+        'mood_summary': _summarize_mood(session_data.get('mood_level')),
+        'extracted_data': session_data.get('extracted_data', {}),
+        'booking_id': session_data.get('booking_id')
+    }
 
 
 def _get_or_create_bot(session_id):
@@ -246,6 +338,13 @@ def confirm_booking():
     elif isinstance(time_slot, str):
         session_date = time_slot
 
+    calendar_url = _build_calendar_link(booking_ref.id)
+
+    db.collection('sessions').document(session_id).set({
+        'booking_session_date': session_date,
+        'booking_session_time': session_time
+    }, merge=True)
+
     email = _get_user_email_from_session(session_id)
     if email:
         app_base_url = os.getenv("APP_BASE_URL", "http://localhost:5000")
@@ -261,7 +360,8 @@ def confirm_booking():
                 "price": price,
                 "booking_id": booking_ref.id,
                 "cta_url": f"{app_base_url}/session/{booking_ref.id}",
-                "cta_label": "view your session"
+                "cta_label": "view your session",
+                "calendar_url": calendar_url
             },
             tags=[{"name": "type", "value": "booking_confirmed"}]
         )
@@ -271,6 +371,69 @@ def confirm_booking():
         'booking_id': booking_ref.id,
         'message': 'Booking confirmed'
     })
+
+@ai_bp.route('/session/summary/<session_id>', methods=['GET'])
+@token_required
+def session_summary(session_id):
+    doc = _get_session_doc(session_id)
+    if not doc:
+        return jsonify({'error': 'Invalid session'}), 404
+    data = doc.to_dict()
+    if data.get('user_id') != g.user_uid:
+        return jsonify({'error': 'Forbidden'}), 403
+    return jsonify(_session_summary_payload(data, session_id=session_id))
+
+@ai_bp.route('/session/summary/latest', methods=['GET'])
+@token_required
+def session_summary_latest():
+    query = (
+        db.collection('sessions')
+        .where('user_id', '==', g.user_uid)
+        .order_by('started_at', direction=firestore.Query.DESCENDING)
+        .limit(1)
+    )
+    docs = list(query.stream())
+    if not docs:
+        return jsonify({'error': 'No sessions found'}), 404
+    doc = docs[0]
+    return jsonify(_session_summary_payload(doc.to_dict(), session_id=doc.id))
+
+@ai_bp.route('/session/calendar/<booking_id>.ics', methods=['GET'])
+def session_calendar(booking_id):
+    booking_doc = db.collection('bookings').document(booking_id).get()
+    if not booking_doc.exists:
+        return jsonify({'error': 'Booking not found'}), 404
+    booking = booking_doc.to_dict()
+    session_id = booking.get('session_id')
+    session_doc = _get_session_doc(session_id) if session_id else None
+    session_data = session_doc.to_dict() if session_doc else {}
+
+    session_date = session_data.get('booking_session_date')
+    session_time = session_data.get('booking_session_time')
+
+    if not session_date:
+        time_slot = booking.get('time_slot')
+        if isinstance(time_slot, dict):
+            session_date = time_slot.get('day')
+            session_time = session_time or time_slot.get('time')
+        elif isinstance(time_slot, str):
+            session_date = time_slot
+
+    start_dt = _next_occurrence(session_date, session_time)
+    if not start_dt:
+        start_dt = datetime.now() + timedelta(days=1)
+    end_dt = start_dt + timedelta(hours=1)
+
+    group_name = booking.get('group_name') or session_data.get('matched_group_name') or "Haven Group"
+    title = f"Haven Session — {group_name}"
+    description = f"Haven small-group session for {group_name}."
+
+    ics_body = _build_ics_event(booking_id, title, start_dt, end_dt, description)
+    filename = f"haven-session-{booking_id}.ics"
+    headers = {
+        "Content-Disposition": f"attachment; filename={filename}"
+    }
+    return Response(ics_body, mimetype="text/calendar", headers=headers)
 
 @ai_bp.route('/therapist/dashboard/<group_id>', methods=['GET'])
 @token_required

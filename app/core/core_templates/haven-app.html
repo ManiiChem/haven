@@ -25,6 +25,7 @@
                 <button class="auth-button ghost" data-auth="guest" onclick="startSignup()">Sign up</button>
                 <button class="auth-button" data-auth="guest" onclick="startLogin()">Log in</button>
                 <button class="auth-button ghost" data-auth="therapist" onclick="showDashboard()">Therapist Dashboard</button>
+                <a class="auth-button ghost" data-auth="user" href="/my-group">My Group</a>
                 <span class="auth-name" id="authUserName" data-auth="user"></span>
                 <button class="auth-button ghost" data-auth="user" onclick="logout()">Log out</button>
             </div>
@@ -296,6 +297,40 @@
             </div>
         </div>
 
+        <!-- Client Confirmation -->
+        <div class="screen" id="clientSummary">
+            <div class="summary-container reveal">
+                <div class="summary-card">
+                    <h2 class="summary-title">You're booked</h2>
+                    <p class="summary-subtitle">Your spot is saved. Here's what we have on file.</p>
+                    <div class="summary-grid">
+                        <div class="summary-panel">
+                            <h3>Session details</h3>
+                            <p class="summary-line" id="clientGroupName">Group: —</p>
+                            <p class="summary-line" id="clientSessionTime">Time: —</p>
+                            <p class="summary-line" id="clientGroupDescription"></p>
+                            <a class="btn-secondary" id="clientCalendarLink" href="#" target="_blank" rel="noopener">Add to calendar</a>
+                        </div>
+                        <div class="summary-panel">
+                            <h3>What you shared</h3>
+                            <p class="summary-line" id="clientMoodSummary"></p>
+                            <ul class="summary-list" id="clientStressors"></ul>
+                        </div>
+                        <div class="summary-panel">
+                            <h3>Primary concern</h3>
+                            <p class="summary-line" id="clientPrimaryConcern">—</p>
+                            <h3>Goal</h3>
+                            <p class="summary-line" id="clientGoal">—</p>
+                            <p class="summary-line" id="clientDurationSeverity"></p>
+                        </div>
+                    </div>
+                    <div class="summary-actions">
+                        <button class="cta-button" onclick="showScreen('landing')">Back to home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Therapist Dashboard -->
         <div class="screen" id="dashboard">
             <div class="dashboard-container reveal">
@@ -330,28 +365,8 @@
                         </div>
                         <ul class="participant-list" id="participantList">
                             <li class="participant-item">
-                                <div class="participant-name">Mani • 22 • Student</div>
-                                <div class="participant-trigger">
-                                    <strong>Primary concern:</strong> Coding bootcamp stress, family expectations<br>
-                                    <strong>Trigger:</strong> Failure, not meeting expectations<br>
-                                    <strong>Needs:</strong> Validation on hard work, permission to rest
-                            </div>
-                            </li>
-                            <li class="participant-item">
-                                <div class="participant-name">Sarah • 26 • Designer</div>
-                                <div class="participant-trigger">
-                                    <strong>Primary concern:</strong> Career transition anxiety, imposter syndrome<br>
-                                    <strong>Trigger:</strong> Comparison with peers<br>
-                                    <strong>Needs:</strong> Confidence building, perspective on growth
-                            </div>
-                            </li>
-                            <li class="participant-item">
-                                <div class="participant-name">Alex • 24 • Engineer</div>
-                                <div class="participant-trigger">
-                                    <strong>Primary concern:</strong> Burnout from startup culture<br>
-                                    <strong>Trigger:</strong> "Always-on" work culture<br>
-                                    <strong>Needs:</strong> Boundary setting strategies, work-life balance
-                            </div>
+                                <div class="participant-name">No participant data yet</div>
+                                <div class="participant-trigger">Participant summaries will appear here after sessions are created.</div>
                             </li>
                         </ul>
                     </div>
@@ -1004,6 +1019,89 @@
                 }
             }
 
+            async function loadClientSummary() {
+                const token = await getAuthTokenOrLogin();
+                const sessionId = localStorage.getItem('session_id');
+                if (!token || !sessionId) 
+                    return;
+                try {
+                    const res = await fetch(`/api/chat/session/summary/${sessionId}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+                    if (!res.ok) 
+                        return;
+                    const data = await res.json();
+                    const group = data.group || {};
+                    const groupName = group.name || 'Your Group';
+                    const groupDesc = group.description || '';
+
+                    const sessionLine = data.session_time
+                        ? `${data.session_date} · ${data.session_time}`
+                        : (data.session_date || 'Scheduled session');
+
+                    const groupEl = document.getElementById('clientGroupName');
+                    const timeEl = document.getElementById('clientSessionTime');
+                    const descEl = document.getElementById('clientGroupDescription');
+                    const moodEl = document.getElementById('clientMoodSummary');
+                    const stressorList = document.getElementById('clientStressors');
+                    const primaryEl = document.getElementById('clientPrimaryConcern');
+                    const goalEl = document.getElementById('clientGoal');
+                    const durationEl = document.getElementById('clientDurationSeverity');
+                    const calendarLink = document.getElementById('clientCalendarLink');
+
+                    if (groupEl) 
+                        groupEl.textContent = `Group: ${groupName}`;
+                    if (timeEl) 
+                        timeEl.textContent = `Time: ${sessionLine}`;
+                    if (descEl && groupDesc) 
+                        descEl.textContent = `Focus: ${groupDesc}`;
+                    if (moodEl) 
+                        moodEl.textContent = data.mood_summary
+                            ? `Mood: ${data.mood_summary}`
+                            : '';
+
+                    if (stressorList) {
+                        stressorList.innerHTML = '';
+                        const stressors = data.stressors || [];
+                        if (!stressors.length) {
+                            const item = document.createElement('li');
+                            item.textContent = 'No stressors captured yet.';
+                            stressorList.appendChild(item);
+                        } else {
+                            stressors.forEach((s) => {
+                                const item = document.createElement('li');
+                                item.textContent = s;
+                                stressorList.appendChild(item);
+                            });
+                        }
+                    }
+
+                    const extracted = data.extracted_data || {};
+                    if (primaryEl) 
+                        primaryEl.textContent = extracted.primary_complaint || '—';
+                    if (goalEl) 
+                        goalEl.textContent = extracted.goal || '—';
+                    if (durationEl) {
+                        const duration = extracted.duration || 'Unknown';
+                        const severity = extracted.severity || 'Moderate';
+                        durationEl.textContent = `Duration: ${duration} • Severity: ${severity}`;
+                    }
+
+                    if (calendarLink) {
+                        if (data.calendar_url) {
+                            calendarLink.href = data.calendar_url;
+                            calendarLink.style.display = 'inline-flex';
+                        } else {
+                            calendarLink.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error('Client summary load failed', e);
+                }
+            }
+
             window.showDashboard = function () {
                 if (currentRole !== 'therapist') {
                     alert('Therapist dashboard access requires a therapist account.');
@@ -1011,6 +1109,11 @@
                 }
                 showScreen('dashboard');
                 loadTherapistDashboard();
+            }
+
+            window.showClientSummary = function () {
+                showScreen('clientSummary');
+                loadClientSummary();
             }
 
             window.selectTimeSlot = function (element) {
@@ -1057,7 +1160,11 @@
                         alert('Booking failed. Please try again.');
                         return;
                     }
-                    showScreen('dashboard');
+                    if (currentRole === 'therapist') {
+                        showDashboard();
+                    } else {
+                        showClientSummary();
+                    }
                 } catch (e) {
                     console.error('Booking failed', e);
                     alert('Booking failed. Please try again.');

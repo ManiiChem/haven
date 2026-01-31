@@ -20,5 +20,10 @@
   <a class="cta" href="{{ cta_url }}">{{ cta_label }}</a>
 {% endif %}
 <div class="divider"></div>
+{% if calendar_url %}
+  <div style="margin: 8px 0 0 0;">
+    <a class="cta" href="{{ calendar_url }}">add to calendar</a>
+  </div>
+{% endif %}
 <div class="subtle">if you need to reschedule, just reply and we'll help.</div>
 {% endblock %}
