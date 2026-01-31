@@ -77,7 +77,7 @@ body {
         font-size: 56px;
     }
     .hero-logo {
-        width: 130px;
+        width: 360px;
     }
     .tagline {
         font-size: 20px;
@@ -254,8 +254,8 @@ body {
 }
 
 .hero-logo {
-    width: 150px;
-    max-width: 70%;
+    width: 500px;
+    max-width: 90%;
     height: auto;
     margin: 0 auto 16px;
     display: block;
