@@ -24,16 +24,17 @@
     <!-- Landing Screen -->
     <div class="screen active" id="landing">
         <div class="landing">
-            <div class="hero-content">
-                <img class="hero-logo" src="{{ url_for('static', filename='branding/haven.png') }}" alt="Haven logo">
-                
+            <div class="hero-content reveal">
+                <img class="hero-logo" src="{{ url_for('static', filename='branding/havenlogo.png') }}" alt="Haven logo">
                 <p class="tagline">A warm space for your mind to rest</p>
-                <button class="cta-button" onclick="startJourney()">Begin Your Journey</button>
+                <div class="cta-wrap">
+                    <button class="cta-button" onclick="startJourney()">Begin Your Journey</button>
+                </div>
             </div>
         </div>
         <div class="homepage-details">
             <div class="info-grid">
-                <div class="info-card">
+                <div class="info-card reveal delay-1">
                     <h3>What Haven is</h3>
                     <p>
                         Haven is a mental wellness app that uses gentle conversation and playful reflection
@@ -41,7 +42,7 @@
                         do not diagnose or treat conditions.
                     </p>
                 </div>
-                <div class="info-card">
+                <div class="info-card reveal delay-2">
                     <h3>How it works</h3>
                     <ul class="info-list">
                         <li>Check in with a calm, guided chat</li>
@@ -50,7 +51,7 @@
                         <li>Choose a session time and get booked</li>
                     </ul>
                 </div>
-                <div class="info-card">
+                <div class="info-card reveal delay-3">
                     <h3>Data we request & why</h3>
                     <ul class="info-list">
                         <li><strong>Email + name</strong> — to create your account and send session updates</li>
@@ -65,7 +66,7 @@
 
     <!-- Chat Screen -->
     <div class="screen" id="chat">
-        <div class="chat-container">
+        <div class="chat-container reveal">
             <div class="chat-header">
                 <h2>Let's Talk</h2>
                 <p>share what's on your mind, no pressure</p>
@@ -91,11 +92,12 @@
                 <div class="progress-fill" id="chatProgress" style="width: 20%"></div>
             </div>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Bubble Popper Game -->
     <div class="screen" id="bubbleGame">
-        <div class="game-container">
+        <div class="game-container reveal">
             <div class="game-header">
                 <h2>What's Weighing on You?</h2>
                 <p>tap the bubbles that feel heavy right now</p>
@@ -103,11 +105,12 @@
             <div class="bubble-arena" id="bubbleArena"></div>
             <button class="cta-button" onclick="finishBubbleGame()">Continue</button>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Mood Slider Game -->
     <div class="screen" id="moodGame">
-        <div class="mood-slider-container">
+        <div class="mood-slider-container reveal">
             <div class="game-header">
                 <h2>The Weather Inside</h2>
                 <p>show me what the weather looks like inside your head right now</p>
@@ -128,11 +131,12 @@
             <br><br>
             <button class="cta-button" onclick="finishMoodGame()">Continue</button>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Insight Card -->
     <div class="screen" id="insight">
-        <div class="insight-container">
+        <div class="insight-container reveal">
             <div class="insight-card">
                 <span class="archetype-badge" id="insightArchetype">The Navigator</span>
                 <h2 class="insight-title" id="insightTitle">You're carrying the weight of everyone's expectations</h2>
@@ -150,7 +154,7 @@
 
     <!-- Group Matching -->
     <div class="screen" id="matching">
-        <div class="matching-container">
+        <div class="matching-container reveal">
             <h2 style="font-family: var(--font-display); font-size: 42px; margin-bottom: 20px;">
                 Finding Your Tribe
             </h2>
@@ -191,11 +195,12 @@
 
             <button class="cta-button" onclick="showScheduling()">Join This Group</button>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Scheduling -->
     <div class="screen" id="scheduling">
-        <div class="schedule-container">
+        <div class="schedule-container reveal">
             <div class="chat-header">
                 <h2>Pick Your Time</h2>
                 <p>when works best for you?</p>
@@ -233,7 +238,7 @@
 
     <!-- Payment (Mock) -->
     <div class="screen" id="payment">
-        <div class="schedule-container">
+        <div class="schedule-container reveal">
             <div class="chat-header">
                 <h2>Complete Booking</h2>
                 <p>secure your spot</p>
@@ -280,7 +285,7 @@
 
     <!-- Therapist Dashboard -->
     <div class="screen" id="dashboard">
-        <div class="dashboard-container">
+        <div class="dashboard-container reveal">
             <div class="dashboard-header">
                 <h1>Therapist Dashboard</h1>
                 <p style="color: #718096; font-size: 18px;">Session: The Navigators • Tuesday, 6:00 PM</p>
@@ -367,7 +372,7 @@
 <script type="module">
         // 1. Import Firebase Services
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         // 2. Your Config (I kept your keys)
         const firebaseConfig = {
@@ -388,6 +393,12 @@
         let selectedTimeSlot = null;
         let matchData = null;
         let chatTurnCount = 1;
+        let sessionStarted = false;
+        let authInFlight = false;
+
+        setPersistence(auth, browserLocalPersistence).catch((error) => {
+            console.warn("Auth persistence error:", error);
+        });
 
         function applyMatchToUI(data) {
             if (!data || !data.group || !data.insight) return;
@@ -419,20 +430,13 @@
         // ---------------------------------------------------------
 
         // We attach functions to 'window' so the HTML onclick="" can see them
-        window.startJourney = async function() {
+        async function ensureBackendSession(user) {
+            if (authInFlight || sessionStarted) return;
+            authInFlight = true;
             try {
-                console.log("Starting login...");
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // Get the secure token
-                const token = await user.getIdToken();
-                console.log("Got Token:", token.substring(0, 10) + "...");
-
-                // Save for later
+                const token = await user.getIdToken(true);
                 localStorage.setItem('userToken', token);
-                
-                // Send to Flask Backend to Sync
+
                 const response = await fetch('/api/auth/sync', {
                     method: 'POST',
                     headers: {
@@ -441,23 +445,44 @@
                     }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("Backend Sync Success:", data);
-                    
-                    // Start the Chat Session in backend
-                    await startChatSession(token);
-                    
-                    // Show Chat Screen
-                    showScreen('chat');
-                } else {
-                    console.error("Backend Sync Failed");
-                    alert("Could not connect to server.");
+                if (!response.ok) {
+                    throw new Error("Backend sync failed");
                 }
+
+                await startChatSession(token);
+                sessionStarted = true;
+                showScreen('chat');
+            } finally {
+                authInFlight = false;
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user && !sessionStarted) {
+                try {
+                    await ensureBackendSession(user);
+                } catch (e) {
+                    console.error("Auto login failed", e);
+                }
+            }
+        });
+
+        window.startJourney = async function() {
+            try {
+                console.log("Starting login...");
+                if (auth.currentUser) {
+                    await ensureBackendSession(auth.currentUser);
+                    return;
+                }
+                authInFlight = true;
+                const result = await signInWithPopup(auth, provider);
+                await ensureBackendSession(result.user);
 
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("Login failed: " + error.message);
+            } finally {
+                authInFlight = false;
             }
         };
 
@@ -467,6 +492,9 @@
                     method: 'POST',
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
+                if (!res.ok) {
+                    throw new Error("Chat session start failed");
+                }
                 const data = await res.json();
                 localStorage.setItem('session_id', data.session_id);
                 chatTurnCount = 1;

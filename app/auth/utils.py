@@ -1,6 +1,9 @@
+import logging
 from functools import wraps
 from flask import request, jsonify, g
 from firebase_admin import auth
+
+logger = logging.getLogger("haven.auth")
 
 def token_required(f):
     @wraps(f)
@@ -21,6 +24,7 @@ def token_required(f):
             g.user_email = decoded_token.get('email')
             
         except Exception as e:
+            logger.error("Token verification failed: %s", e)
             return jsonify({'error': 'Invalid or expired token'}), 403
 
         return f(*args, **kwargs)
