@@ -372,7 +372,7 @@
 <script type="module">
         // 1. Import Firebase Services
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         // 2. Your Config (I kept your keys)
         const firebaseConfig = {
@@ -393,6 +393,12 @@
         let selectedTimeSlot = null;
         let matchData = null;
         let chatTurnCount = 1;
+        let sessionStarted = false;
+        let authInFlight = false;
+
+        setPersistence(auth, browserLocalPersistence).catch((error) => {
+            console.warn("Auth persistence error:", error);
+        });
 
         function applyMatchToUI(data) {
             if (!data || !data.group || !data.insight) return;
@@ -424,20 +430,13 @@
         // ---------------------------------------------------------
 
         // We attach functions to 'window' so the HTML onclick="" can see them
-        window.startJourney = async function() {
+        async function ensureBackendSession(user) {
+            if (authInFlight || sessionStarted) return;
+            authInFlight = true;
             try {
-                console.log("Starting login...");
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // Get the secure token
-                const token = await user.getIdToken();
-                console.log("Got Token:", token.substring(0, 10) + "...");
-
-                // Save for later
+                const token = await user.getIdToken(true);
                 localStorage.setItem('userToken', token);
-                
-                // Send to Flask Backend to Sync
+
                 const response = await fetch('/api/auth/sync', {
                     method: 'POST',
                     headers: {
@@ -446,23 +445,44 @@
                     }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("Backend Sync Success:", data);
-                    
-                    // Start the Chat Session in backend
-                    await startChatSession(token);
-                    
-                    // Show Chat Screen
-                    showScreen('chat');
-                } else {
-                    console.error("Backend Sync Failed");
-                    alert("Could not connect to server.");
+                if (!response.ok) {
+                    throw new Error("Backend sync failed");
                 }
+
+                await startChatSession(token);
+                sessionStarted = true;
+                showScreen('chat');
+            } finally {
+                authInFlight = false;
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user && !sessionStarted) {
+                try {
+                    await ensureBackendSession(user);
+                } catch (e) {
+                    console.error("Auto login failed", e);
+                }
+            }
+        });
+
+        window.startJourney = async function() {
+            try {
+                console.log("Starting login...");
+                if (auth.currentUser) {
+                    await ensureBackendSession(auth.currentUser);
+                    return;
+                }
+                authInFlight = true;
+                const result = await signInWithPopup(auth, provider);
+                await ensureBackendSession(result.user);
 
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("Login failed: " + error.message);
+            } finally {
+                authInFlight = false;
             }
         };
 
@@ -472,6 +492,9 @@
                     method: 'POST',
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
+                if (!res.ok) {
+                    throw new Error("Chat session start failed");
+                }
                 const data = await res.json();
                 localStorage.setItem('session_id', data.session_id);
                 chatTurnCount = 1;
