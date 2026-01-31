@@ -1,115 +1,114 @@
+import json
 import os
+import re
+from typing import Optional, Literal
+
 from google import genai
-from google.genai import types
-from pydantic import BaseModel, Field
-from typing import Literal, Optional
+from pydantic import BaseModel, Field, ValidationError
+
 
 class ExtractedData(BaseModel):
-    primary_complaint: Optional[str] = Field(None, description="The user's main struggle (e.g. Anxiety, Burnout).")
-    duration: Optional[str] = Field(None, description="How long the issue has persisted.")
-    severity: Optional[Literal["low", "medium", "high"]] = Field(None, description="Subjective severity.")
-    goal: Optional[str] = Field(None, description="What the user wants (venting, solutions, etc).")
+    primary_complaint: Optional[str] = Field(None, description="Main struggle (e.g. anxiety, burnout)")
+    duration: Optional[str] = Field(None, description="How long it has been happening")
+    severity: Optional[Literal["low", "medium", "high"]] = Field(None, description="Perceived severity")
+    goal: Optional[str] = Field(None, description="What the user wants: venting, solutions, connection")
+
 
 class TherapyResponse(BaseModel):
-    message: str = Field(description="The warm, empathetic, lowercase response to the user.")
-    ready_for_next_phase: bool = Field(description="Set to True ONLY if the user explicitly consents to moving forward.")
+    message: str = Field(description="Warm, empathetic, lowercase response")
+    ready_for_next_phase: bool = Field(description="True only if user explicitly consents")
     extracted_data: ExtractedData
+
 
 class ChatbotEngine:
     """
-    Therapist Chatbot powered by Google Gemini 1.5 Flash
-    (Uses Native Pydantic Structured Outputs)
+    Therapist Chatbot powered by Google Gemini (via google-genai).
+    Returns structured JSON to drive the flow.
     """
     def __init__(self):
-        raw_key = os.getenv("GOOGLE_API_KEY")
-        if not raw_key:
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
             raise ValueError("GOOGLE_API_KEY not found")
-        
-        self.client = genai.Client(api_key=raw_key.strip())
-        
-        self.system_instruction = """
-        You are a mental wellness intake facilitator for a digital group therapy platform.
 
-        Your role is not to diagnose, treat, or give clinical advice. You are here to listen, reflect, and gently guide the user toward clarity and appropriate group support.
+        self.client = genai.Client(api_key=api_key.strip())
+        self.model_id = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+        self.conversation_history = []
 
-        Core Principles:
-
-        Maintain a calm, warm, non-judgmental tone.
-
-        Use simple, human language. Avoid clinical jargon.
-
-        Ask open-ended questions that help users articulate emotions, stressors, goals, and patterns.
-
-        Validate emotions without reinforcing negative beliefs.
-
-        Never escalate into crisis intervention unless explicitly required (assume non-emergency context).
-
-        Conversational Goals:
-
-        Understand the primary emotional concern (e.g., anxiety, burnout, grief, social stress).
-
-        Identify context (academic, work, relationships, identity, life transitions).
-
-        Detect intensity and persistence (frequency, duration, impact on daily life).
-
-        Clarify the user’s intent (venting, reflection, growth, support).
-
-        Collect timezone and general availability in a natural way.
-
-        Questioning Strategy:
-
-        Start broad, then gently narrow.
-
-        Ask no more than 6–8 meaningful questions total.
-
-        Reflect back insights occasionally (“It sounds like…”).
-
-        Avoid rapid-fire questioning.
-
-        Timezone & Availability:
-
-        At an appropriate moment, naturally ask where the user is located or what timezone they’re in.
-
-        Later, ask about general availability windows (morning / afternoon / evening).
-
-        Ending the Intake:
-
-        End the conversation only when you have sufficient clarity on:
-
-        Main concern
-
-        Desired support style
-
-        Timezone + rough availability
-
-        When ending, summarize what you understood in 2–3 sentences.
-
-        Ask for consent before moving to group matching.
-        """
-
-        # forced schema
-        self.chat = self.client.chats.create(
-            model="gemini-2.5-flash-lite",
-            config=types.GenerateContentConfig(
-                system_instruction=self.system_instruction,
-                temperature=0.5,
-                response_mime_type="application/json",
-                response_schema=TherapyResponse.model_json_schema()
-            )
+        self.system_prompt = (
+            "You are a warm, empathetic intake facilitator for 'Haven', a digital group therapy platform.\n"
+            "You are not a clinician. Avoid clinical jargon. Use lowercase, short sentences.\n\n"
+            "Goals:\n"
+            "1) Understand primary concern, duration, severity, and goal.\n"
+            "2) Summarize and ask for consent before moving forward.\n"
+            "3) Set ready_for_next_phase = true ONLY if the user explicitly agrees.\n\n"
+            "Return ONLY valid JSON in this format:\n"
+            "{\n"
+            '  "message": "string",\n'
+            '  "ready_for_next_phase": boolean,\n'
+            '  "extracted_data": {\n'
+            '    "primary_complaint": "string or null",\n'
+            '    "duration": "string or null",\n'
+            '    "severity": "low|medium|high or null",\n'
+            '    "goal": "string or null"\n'
+            "  }\n"
+            "}\n"
         )
 
-    def generate_response(self, user_message: str) -> dict:
-        try:
-            response = self.chat.send_message(user_message)
-            
-            structured_response = TherapyResponse.model_validate_json(response.text)
-            
-            return structured_response.model_dump()
+    def _build_prompt(self, user_message: str) -> str:
+        self.conversation_history.append({"role": "user", "content": user_message})
+        convo_lines = []
+        for item in self.conversation_history[-10:]:
+            role = item["role"]
+            content = item["content"]
+            convo_lines.append(f"{role.upper()}: {content}")
+        convo_text = "\n".join(convo_lines)
+        return f"{self.system_prompt}\nConversation:\n{convo_text}\n\nReturn JSON only."
 
-        except Exception as e:
-            print(f"Gemini Error: {e}")
+    @staticmethod
+    def _extract_text(response) -> str:
+        if hasattr(response, "text") and response.text:
+            return response.text
+        if hasattr(response, "candidates") and response.candidates:
+            parts = response.candidates[0].content.parts
+            if parts and hasattr(parts[0], "text"):
+                return parts[0].text
+        return ""
+
+    @staticmethod
+    def _parse_json(text: str) -> dict:
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if not match:
+            raise ValueError("No JSON found in response")
+        return json.loads(match.group(0))
+
+    def generate_response(self, user_message: str) -> dict:
+        prompt = self._build_prompt(user_message)
+        try:
+            response = self.client.models.generate_content(
+                model=self.model_id,
+                contents=prompt
+            )
+            text = self._extract_text(response)
+            data = self._parse_json(text)
+
+            parsed = TherapyResponse.model_validate(data)
+            self.conversation_history.append({"role": "assistant", "content": parsed.message})
+            return parsed.model_dump()
+
+        except (json.JSONDecodeError, ValidationError, ValueError) as e:
             return {
-                "message": "i'm having a little trouble connecting right now. could you say that again?",
+                "message": "i'm having a little trouble understanding that. could you say it a different way?",
+                "ready_for_next_phase": False,
+                "extracted_data": {
+                    "primary_complaint": None,
+                    "duration": None,
+                    "severity": None,
+                    "goal": None
+                }
+            }
+        except Exception as e:
+            return {
+                "message": "i'm having a little trouble connecting right now. could you try again in a moment?",
                 "ready_for_next_phase": False,
                 "extracted_data": {
                     "primary_complaint": None,
