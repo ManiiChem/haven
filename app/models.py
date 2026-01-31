@@ -66,3 +66,11 @@ class ChatSession:
             current_messages = doc.to_dict().get('messages', [])
             current_messages.append(message_data)
             ref.update({'messages': current_messages})
+
+    @staticmethod
+    def get_messages(session_id):
+        ref = db.collection(ChatSession.collection_name).document(session_id)
+        doc = ref.get()
+        if doc.exists:
+            return doc.to_dict().get('messages', [])
+        return []
