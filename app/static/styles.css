@@ -62,8 +62,8 @@ body {
 }
 
 .top-brand img {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
 }
 
 .top-links a {
@@ -113,6 +113,84 @@ body {
     .footer-links a {
         margin-left: 0;
         margin-right: 16px;
+    }
+}
+
+@media (max-width: 900px) {
+    .logo {
+        font-size: 56px;
+    }
+    .hero-logo {
+        width: 150px;
+    }
+    .tagline {
+        font-size: 20px;
+    }
+    .chat-container,
+    .schedule-container,
+    .mood-slider-container,
+    .game-container {
+        padding: 30px 16px;
+    }
+    .messages {
+        max-height: 380px;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .top-nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .top-links a {
+        margin-left: 0;
+        margin-right: 14px;
+    }
+    .landing {
+        padding-top: 96px;
+    }
+    .hero-content {
+        padding: 24px 16px;
+    }
+    .cta-button {
+        width: 100%;
+    }
+    .chat-header h2 {
+        font-size: 28px;
+    }
+    .group-card,
+    .insight-card {
+        padding: 24px;
+    }
+    .time-slot {
+        padding: 14px;
+    }
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    .messages {
+        max-height: 320px;
+        padding: 12px;
+    }
+    .input-area {
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px;
+    }
+    .send-button {
+        width: 100%;
+        height: 46px;
+        border-radius: 16px;
+    }
+    .bubble {
+        font-size: 13px;
+    }
+    .mood-slider {
+        width: 100%;
     }
 }
 
@@ -257,21 +335,34 @@ body {
 
 .homepage-details {
     max-width: 1100px;
-    margin: -20px auto 40px;
+    margin: -10px auto 40px;
     padding: 0 20px 40px;
 }
 
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    gap: 22px;
 }
 
 .info-card {
-    background: var(--bg-card);
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(35, 40, 55, 0.08);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.55) 100%);
+    border-radius: 20px;
+    padding: 26px;
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 18px 40px rgba(102, 126, 234, 0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.info-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(102,126,234,0.18), transparent 55%);
+    pointer-events: none;
 }
 
 .info-card h3 {
