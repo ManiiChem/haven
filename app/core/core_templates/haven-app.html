@@ -24,16 +24,17 @@
     <!-- Landing Screen -->
     <div class="screen active" id="landing">
         <div class="landing">
-            <div class="hero-content">
-                <img class="hero-logo" src="{{ url_for('static', filename='branding/haven.png') }}" alt="Haven logo">
-                
+            <div class="hero-content reveal">
+                <img class="hero-logo" src="{{ url_for('static', filename='branding/havenlogo.png') }}" alt="Haven logo">
                 <p class="tagline">A warm space for your mind to rest</p>
-                <button class="cta-button" onclick="startJourney()">Begin Your Journey</button>
+                <div class="cta-wrap">
+                    <button class="cta-button" onclick="startJourney()">Begin Your Journey</button>
+                </div>
             </div>
         </div>
         <div class="homepage-details">
             <div class="info-grid">
-                <div class="info-card">
+                <div class="info-card reveal delay-1">
                     <h3>What Haven is</h3>
                     <p>
                         Haven is a mental wellness app that uses gentle conversation and playful reflection
@@ -41,7 +42,7 @@
                         do not diagnose or treat conditions.
                     </p>
                 </div>
-                <div class="info-card">
+                <div class="info-card reveal delay-2">
                     <h3>How it works</h3>
                     <ul class="info-list">
                         <li>Check in with a calm, guided chat</li>
@@ -50,7 +51,7 @@
                         <li>Choose a session time and get booked</li>
                     </ul>
                 </div>
-                <div class="info-card">
+                <div class="info-card reveal delay-3">
                     <h3>Data we request & why</h3>
                     <ul class="info-list">
                         <li><strong>Email + name</strong> — to create your account and send session updates</li>
@@ -65,7 +66,7 @@
 
     <!-- Chat Screen -->
     <div class="screen" id="chat">
-        <div class="chat-container">
+        <div class="chat-container reveal">
             <div class="chat-header">
                 <h2>Let's Talk</h2>
                 <p>share what's on your mind, no pressure</p>
@@ -91,11 +92,12 @@
                 <div class="progress-fill" id="chatProgress" style="width: 20%"></div>
             </div>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Bubble Popper Game -->
     <div class="screen" id="bubbleGame">
-        <div class="game-container">
+        <div class="game-container reveal">
             <div class="game-header">
                 <h2>What's Weighing on You?</h2>
                 <p>tap the bubbles that feel heavy right now</p>
@@ -103,11 +105,12 @@
             <div class="bubble-arena" id="bubbleArena"></div>
             <button class="cta-button" onclick="finishBubbleGame()">Continue</button>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Mood Slider Game -->
     <div class="screen" id="moodGame">
-        <div class="mood-slider-container">
+        <div class="mood-slider-container reveal">
             <div class="game-header">
                 <h2>The Weather Inside</h2>
                 <p>show me what the weather looks like inside your head right now</p>
@@ -128,11 +131,12 @@
             <br><br>
             <button class="cta-button" onclick="finishMoodGame()">Continue</button>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Insight Card -->
     <div class="screen" id="insight">
-        <div class="insight-container">
+        <div class="insight-container reveal">
             <div class="insight-card">
                 <span class="archetype-badge" id="insightArchetype">The Navigator</span>
                 <h2 class="insight-title" id="insightTitle">You're carrying the weight of everyone's expectations</h2>
@@ -150,7 +154,7 @@
 
     <!-- Group Matching -->
     <div class="screen" id="matching">
-        <div class="matching-container">
+        <div class="matching-container reveal">
             <h2 style="font-family: var(--font-display); font-size: 42px; margin-bottom: 20px;">
                 Finding Your Tribe
             </h2>
@@ -191,11 +195,12 @@
 
             <button class="cta-button" onclick="showScheduling()">Join This Group</button>
         </div>
+        <div class="phase-divider"></div>
     </div>
 
     <!-- Scheduling -->
     <div class="screen" id="scheduling">
-        <div class="schedule-container">
+        <div class="schedule-container reveal">
             <div class="chat-header">
                 <h2>Pick Your Time</h2>
                 <p>when works best for you?</p>
@@ -233,7 +238,7 @@
 
     <!-- Payment (Mock) -->
     <div class="screen" id="payment">
-        <div class="schedule-container">
+        <div class="schedule-container reveal">
             <div class="chat-header">
                 <h2>Complete Booking</h2>
                 <p>secure your spot</p>
@@ -280,7 +285,7 @@
 
     <!-- Therapist Dashboard -->
     <div class="screen" id="dashboard">
-        <div class="dashboard-container">
+        <div class="dashboard-container reveal">
             <div class="dashboard-header">
                 <h1>Therapist Dashboard</h1>
                 <p style="color: #718096; font-size: 18px;">Session: The Navigators • Tuesday, 6:00 PM</p>
