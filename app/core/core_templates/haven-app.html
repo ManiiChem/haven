@@ -1,920 +1,1020 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haven — A Warm Space for Your Mind</title>
-    <meta name="description" content="Haven is a gentle mental wellness app that uses calm conversation and reflective exercises to match you with supportive small groups.">
-    <meta property="og:title" content="Haven — A Warm Space for Your Mind">
-    <meta property="og:description" content="A gentle mental wellness app that uses calm conversation and reflective exercises to match you with supportive small groups.">
-    <meta property="og:image" content="{{ url_for('static', filename='branding/haven.png') }}">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='branding/haven-mark.png') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='branding/haven-mark.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="animated-bg">
-        <div class="floating-orb orb-1"></div>
-        <div class="floating-orb orb-2"></div>
-        <div class="floating-orb orb-3"></div>
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Haven — A Warm Space for Your Mind</title>
+        <meta name="description" content="Haven is a gentle mental wellness app that uses calm conversation and reflective exercises to match you with supportive small groups.">
+        <meta property="og:title" content="Haven — A Warm Space for Your Mind">
+        <meta property="og:description" content="A gentle mental wellness app that uses calm conversation and reflective exercises to match you with supportive small groups.">
+        <meta property="og:image" content="{{ url_for('static', filename='branding/haven.png') }}">
+        <meta property="og:type" content="website">
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='branding/haven-mark.png') }}">
+        <link rel="apple-touch-icon" href="{{ url_for('static', filename='branding/haven-mark.png') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <div class="animated-bg">
+            <div class="floating-orb orb-1"></div>
+            <div class="floating-orb orb-2"></div>
+            <div class="floating-orb orb-3"></div>
+        </div>
 
-    <!-- Landing Screen -->
-    <div class="screen active" id="landing">
-        <div class="landing">
-            <div class="hero-content reveal">
-                <img class="hero-logo" src="{{ url_for('static', filename='branding/haven.png') }}" alt="Haven logo">
-                <h1 class="logo">Haven</h1>
-                <p class="tagline">A warm space for your mind to rest</p>
-                <div class="cta-wrap">
-                    <button class="cta-button" onclick="startJourney()">Begin Your Journey</button>
+        <!-- Landing Screen -->
+        <div class="screen active" id="landing">
+            <div class="landing">
+                <div class="hero-content reveal">
+                    <img class="hero-logo" src="{{ url_for('static', filename='branding/haven.png') }}" alt="Haven logo">
+
+                    <p class="tagline">A warm space for your mind to rest</p>
+                    <div class="cta-wrap">
+                        <button class="cta-button" onclick="startJourney()">Begin Your Journey</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="homepage-details">
-            <div class="info-grid">
-                <div class="info-card reveal delay-1">
-                    <h3>What Haven is</h3>
-                    <p>
+            <div class="homepage-details">
+                <div class="info-grid">
+                    <div class="info-card reveal delay-1">
+                        <h3>What Haven is</h3>
+                        <p>
                         Haven is a mental wellness app that uses gentle conversation and playful reflection
                         to match you with a supportive small group. We are not a medical provider and we
                         do not diagnose or treat conditions.
                     </p>
-                </div>
-                <div class="info-card reveal delay-2">
-                    <h3>How it works</h3>
-                    <ul class="info-list">
-                        <li>Check in with a calm, guided chat</li>
-                        <li>Do two quick reflection exercises</li>
-                        <li>Receive a suggested group that fits your needs</li>
-                        <li>Choose a session time and get booked</li>
-                    </ul>
-                </div>
-                <div class="info-card reveal delay-3">
-                    <h3>Data we request & why</h3>
-                    <ul class="info-list">
-                        <li><strong>Email + name</strong> — to create your account and send session updates</li>
-                        <li><strong>Profile photo</strong> — optional, helps personalize your experience</li>
-                        <li><strong>Session inputs</strong> — to match you with the right group</li>
-                    </ul>
-                    <p class="info-note">See our <a href="/privacy">Privacy Policy</a> for full details.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chat Screen -->
-    <div class="screen" id="chat">
-        <div class="chat-container reveal">
-            <div class="chat-header">
-                <h2>Let's Talk</h2>
-                <p>share what's on your mind, no pressure</p>
-            </div>
-            <div class="messages" id="messages">
-                <div class="message bot">
-                    <div class="message-avatar bot-avatar">🌙</div>
-                    <div class="message-content">
-                        <p>hey there. the world can be a lot sometimes. how are you holding up today?</p>
+                    </div>
+                    <div class="info-card reveal delay-2">
+                        <h3>How it works</h3>
+                        <ul class="info-list">
+                            <li>Check in with a calm, guided chat</li>
+                            <li>Do two quick reflection exercises</li>
+                            <li>Receive a suggested group that fits your needs</li>
+                            <li>Choose a session time and get booked</li>
+                        </ul>
+                    </div>
+                    <div class="info-card reveal delay-3">
+                        <h3>Data we request & why</h3>
+                        <ul class="info-list">
+                            <li>
+                                <strong>Email + name</strong> — to create your account and send session updates</li>
+                            <li>
+                                <strong>Profile photo</strong> — optional, helps personalize your experience</li>
+                            <li>
+                                <strong>Session inputs</strong> — to match you with the right group</li>
+                        </ul>
+                        <p class="info-note">See our <a href="/privacy">Privacy Policy</a> for full details.</p>
                     </div>
                 </div>
             </div>
-            <div class="input-area">
-                <input type="text" class="chat-input" id="chatInput" placeholder="type anything..." onkeypress="handleEnter(event)">
-                <button class="send-button" onclick="sendMessage()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                </button>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="chatProgress" style="width: 20%"></div>
-            </div>
         </div>
-        <div class="phase-divider"></div>
-    </div>
 
-    <!-- Bubble Popper Game -->
-    <div class="screen" id="bubbleGame">
-        <div class="game-container reveal">
-            <div class="game-header">
-                <h2>What's Weighing on You?</h2>
-                <p>tap the bubbles that feel heavy right now</p>
-            </div>
-            <div class="bubble-arena" id="bubbleArena"></div>
-            <button class="cta-button" onclick="finishBubbleGame()">Continue</button>
-        </div>
-        <div class="phase-divider"></div>
-    </div>
-
-    <!-- Mood Slider Game -->
-    <div class="screen" id="moodGame">
-        <div class="mood-slider-container reveal">
-            <div class="game-header">
-                <h2>The Weather Inside</h2>
-                <p>show me what the weather looks like inside your head right now</p>
-            </div>
-            <div class="landscape" id="landscape">
-                <div class="landscape-sky" id="landscapeSky"></div>
-                <div class="landscape-ground"></div>
-                <div class="weather-elements" id="weatherElements">
-                    <div class="sun" id="sun"></div>
+        <!-- Chat Screen -->
+        <div class="screen" id="chat">
+            <div class="chat-container reveal">
+                <div class="chat-header">
+                    <h2>Let's Talk</h2>
+                    <p>share what's on your mind, no pressure</p>
+                </div>
+                <div class="messages" id="messages">
+                    <div class="message bot">
+                        <div class="message-avatar bot-avatar">🌙</div>
+                        <div class="message-content">
+                            <p>hey there. the world can be a lot sometimes. how are you holding up today?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="type anything..." onkeypress="handleEnter(event)">
+                    <button class="send-button" onclick="sendMessage()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="chatProgress" style="width: 20%"></div>
                 </div>
             </div>
-            <input type="range" min="0" max="100" value="50" class="mood-slider" id="moodSlider">
-            <div class="mood-labels">
-                <span>Stormy</span>
-                <span>Cloudy</span>
-                <span>Sunny</span>
-            </div>
-            <br><br>
-            <button class="cta-button" onclick="finishMoodGame()">Continue</button>
+            <div class="phase-divider"></div>
         </div>
-        <div class="phase-divider"></div>
-    </div>
 
-    <!-- Insight Card -->
-    <div class="screen" id="insight">
-        <div class="insight-container reveal">
-            <div class="insight-card">
-                <span class="archetype-badge" id="insightArchetype">The Navigator</span>
-                <h2 class="insight-title" id="insightTitle">You're carrying the weight of everyone's expectations</h2>
-                <p class="insight-description" id="insightDescription">
+        <!-- Bubble Popper Game -->
+        <div class="screen" id="bubbleGame">
+            <div class="game-container reveal">
+                <div class="game-header">
+                    <h2>What's Weighing on You?</h2>
+                    <p>tap the bubbles that feel heavy right now</p>
+                </div>
+                <div class="bubble-arena" id="bubbleArena"></div>
+                <button class="cta-button" onclick="finishBubbleGame()">Continue</button>
+            </div>
+            <div class="phase-divider"></div>
+        </div>
+
+        <!-- Mood Slider Game -->
+        <div class="screen" id="moodGame">
+            <div class="mood-slider-container reveal">
+                <div class="game-header">
+                    <h2>The Weather Inside</h2>
+                    <p>show me what the weather looks like inside your head right now</p>
+                </div>
+                <div class="landscape" id="landscape">
+                    <div class="landscape-sky" id="landscapeSky"></div>
+                    <div class="landscape-ground"></div>
+                    <div class="weather-elements" id="weatherElements">
+                        <div class="sun" id="sun"></div>
+                    </div>
+                </div>
+                <input type="range" min="0" max="100" value="50" class="mood-slider" id="moodSlider">
+                <div class="mood-labels">
+                    <span>Stormy</span>
+                    <span>Cloudy</span>
+                    <span>Sunny</span>
+                </div>
+                <br><br>
+                <button class="cta-button" onclick="finishMoodGame()">Continue</button>
+            </div>
+            <div class="phase-divider"></div>
+        </div>
+
+        <!-- Insight Card -->
+        <div class="screen" id="insight">
+            <div class="insight-container reveal">
+                <div class="insight-card">
+                    <span class="archetype-badge" id="insightArchetype">The Navigator</span>
+                    <h2 class="insight-title" id="insightTitle">You're carrying the weight of everyone's expectations</h2>
+                    <p class="insight-description" id="insightDescription">
                     You're a guardian type—protective, driven, but tired. You set incredibly high standards for yourself, 
                     and right now, it feels like you're constantly proving your worth. That's exhausting.
                 </p>
-                <p class="insight-description" id="insightSecondary">
+                    <p class="insight-description" id="insightSecondary">
                     The good news? You're not alone in this. There are others who understand exactly what you're going through.
                 </p>
-                <button class="cta-button" onclick="showMatching()">Find My People</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Group Matching -->
-    <div class="screen" id="matching">
-        <div class="matching-container reveal">
-            <h2 style="font-family: var(--font-display); font-size: 42px; margin-bottom: 20px;">
-                Finding Your Tribe
-            </h2>
-            <p style="font-size: 20px; color: var(--text-secondary); margin-bottom: 40px;">
-                connecting you with people who get it...
-            </p>
-            
-            <div class="connection-animation">
-                <div class="dots-container">
-                    <div class="connection-dot"></div>
-                    <div class="connection-dot"></div>
-                    <div class="connection-dot"></div>
+                    <button class="cta-button" onclick="showMatching()">Find My People</button>
                 </div>
             </div>
+        </div>
 
-            <div class="group-card">
-                <h3 class="group-name" id="groupName">The Navigators</h3>
-                <p class="group-description" id="groupDescription">
+        <!-- Group Matching -->
+        <div class="screen" id="matching">
+            <div class="matching-container reveal">
+                <h2 style="font-family: var(--font-display); font-size: 42px; margin-bottom: 20px;">
+                Finding Your Tribe
+            </h2>
+                <p style="font-size: 20px; color: var(--text-secondary); margin-bottom: 40px;">
+                connecting you with people who get it...
+            </p>
+
+                <div class="connection-animation">
+                    <div class="dots-container">
+                        <div class="connection-dot"></div>
+                        <div class="connection-dot"></div>
+                        <div class="connection-dot"></div>
+                    </div>
+                </div>
+
+                <div class="group-card">
+                    <h3 class="group-name" id="groupName">The Navigators</h3>
+                    <p class="group-description" id="groupDescription">
                     A supportive space for high-achievers dealing with career stress, imposter syndrome, 
                     and the pressure of constant performance. You all understand what it's like to feel 
                     like you're never quite enough.
                 </p>
-                <div class="group-stats">
-                    <div class="stat">
-                        <span>👥</span>
-                        <span id="groupCapacity">6-8 members</span>
-                    </div>
-                    <div class="stat">
-                        <span>📅</span>
-                        <span>Weekly sessions</span>
-                    </div>
-                    <div class="stat">
-                        <span>⏰</span>
-                        <span>60 minutes</span>
+                    <div class="group-stats">
+                        <div class="stat">
+                            <span>👥</span>
+                            <span id="groupCapacity">6-8 members</span>
+                        </div>
+                        <div class="stat">
+                            <span>📅</span>
+                            <span>Weekly sessions</span>
+                        </div>
+                        <div class="stat">
+                            <span>⏰</span>
+                            <span>60 minutes</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button class="cta-button" onclick="showScheduling()">Join This Group</button>
+                <button class="cta-button" onclick="showScheduling()">Join This Group</button>
+            </div>
+            <div class="phase-divider"></div>
         </div>
-        <div class="phase-divider"></div>
-    </div>
 
-    <!-- Scheduling -->
-    <div class="screen" id="scheduling">
-        <div class="schedule-container reveal">
-            <div class="chat-header">
-                <h2>Pick Your Time</h2>
-                <p>when works best for you?</p>
+        <!-- Scheduling -->
+        <div class="screen" id="scheduling">
+            <div class="schedule-container reveal">
+                <div class="chat-header">
+                    <h2>Pick Your Time</h2>
+                    <p>when works best for you?</p>
+                </div>
+
+                <div class="calendar-slots">
+                    <div class="time-slot" data-day="Tuesday" data-time="6:00 PM" onclick="selectTimeSlot(this)">
+                        <div style="font-weight: 600; margin-bottom: 5px;">Tuesday</div>
+                        <div style="font-size: 14px; color: #718096;">6:00 PM</div>
+                    </div>
+                    <div class="time-slot" data-day="Wednesday" data-time="7:00 PM" onclick="selectTimeSlot(this)">
+                        <div style="font-weight: 600; margin-bottom: 5px;">Wednesday</div>
+                        <div style="font-size: 14px; color: #718096;">7:00 PM</div>
+                    </div>
+                    <div class="time-slot" data-day="Thursday" data-time="6:00 PM" onclick="selectTimeSlot(this)">
+                        <div style="font-weight: 600; margin-bottom: 5px;">Thursday</div>
+                        <div style="font-size: 14px; color: #718096;">6:00 PM</div>
+                    </div>
+                    <div class="time-slot" data-day="Saturday" data-time="10:00 AM" onclick="selectTimeSlot(this)">
+                        <div style="font-weight: 600; margin-bottom: 5px;">Saturday</div>
+                        <div style="font-size: 14px; color: #718096;">10:00 AM</div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: 20px; margin: 30px 0; box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+                    <h3 style="margin-bottom: 15px;">Session Details</h3>
+                    <p style="color: #718096; margin-bottom: 20px;" id="scheduleGroupName">Group: The Navigators</p>
+                    <p style="color: #718096; margin-bottom: 20px;">Duration: 60 minutes</p>
+                    <p style="font-size: 24px; font-weight: 600; color: var(--accent-purple);" id="schedulePrice">AED 120 / session</p>
+                </div>
+
+                <button class="cta-button" onclick="showPayment()">Continue to Payment</button>
             </div>
-
-            <div class="calendar-slots">
-                <div class="time-slot" data-day="Tuesday" data-time="6:00 PM" onclick="selectTimeSlot(this)">
-                    <div style="font-weight: 600; margin-bottom: 5px;">Tuesday</div>
-                    <div style="font-size: 14px; color: #718096;">6:00 PM</div>
-                </div>
-                <div class="time-slot" data-day="Wednesday" data-time="7:00 PM" onclick="selectTimeSlot(this)">
-                    <div style="font-weight: 600; margin-bottom: 5px;">Wednesday</div>
-                    <div style="font-size: 14px; color: #718096;">7:00 PM</div>
-                </div>
-                <div class="time-slot" data-day="Thursday" data-time="6:00 PM" onclick="selectTimeSlot(this)">
-                    <div style="font-weight: 600; margin-bottom: 5px;">Thursday</div>
-                    <div style="font-size: 14px; color: #718096;">6:00 PM</div>
-                </div>
-                <div class="time-slot" data-day="Saturday" data-time="10:00 AM" onclick="selectTimeSlot(this)">
-                    <div style="font-weight: 600; margin-bottom: 5px;">Saturday</div>
-                    <div style="font-size: 14px; color: #718096;">10:00 AM</div>
-                </div>
-            </div>
-
-            <div style="background: white; padding: 30px; border-radius: 20px; margin: 30px 0; box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
-                <h3 style="margin-bottom: 15px;">Session Details</h3>
-                <p style="color: #718096; margin-bottom: 20px;" id="scheduleGroupName">Group: The Navigators</p>
-                <p style="color: #718096; margin-bottom: 20px;">Duration: 60 minutes</p>
-                <p style="font-size: 24px; font-weight: 600; color: var(--accent-purple);" id="schedulePrice">AED 120 / session</p>
-            </div>
-
-            <button class="cta-button" onclick="showPayment()">Continue to Payment</button>
         </div>
-    </div>
 
-    <!-- Payment (Mock) -->
-    <div class="screen" id="payment">
-        <div class="schedule-container reveal">
-            <div class="chat-header">
-                <h2>Complete Booking</h2>
-                <p>secure your spot</p>
+        <!-- Payment (Mock) -->
+        <div class="screen" id="payment">
+            <div class="schedule-container reveal">
+                <div class="chat-header">
+                    <h2>Complete Booking</h2>
+                    <p>secure your spot</p>
+                </div>
+
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); margin: 30px 0;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">💳</div>
+                        <h3 style="margin-bottom: 10px;">Payment Information</h3>
+                        <p style="color: #718096;">Powered by Stripe (Sandbox Mode)</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">Card Number</label>
+                        <input type="text" placeholder="4242 4242 4242 4242" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Expiry</label>
+                            <input type="text" placeholder="MM/YY" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">CVC</label>
+                            <input type="text" placeholder="123" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px;">
+                        </div>
+                    </div>
+
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-top: 30px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Session Cost</span>
+                            <span style="font-weight: 600;">AED 120</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid #e2e8f0;">
+                            <span style="font-weight: 600;">Total</span>
+                            <span style="font-size: 20px; font-weight: 600; color: var(--accent-purple);">AED 120</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="cta-button" onclick="confirmBooking()">Confirm & Pay</button>
             </div>
-
-            <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); margin: 30px 0;">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="font-size: 48px; margin-bottom: 20px;">💳</div>
-                    <h3 style="margin-bottom: 10px;">Payment Information</h3>
-                    <p style="color: #718096;">Powered by Stripe (Sandbox Mode)</p>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Card Number</label>
-                    <input type="text" placeholder="4242 4242 4242 4242" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px;">
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                    <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">Expiry</label>
-                        <input type="text" placeholder="MM/YY" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px;">
-                    </div>
-                    <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">CVC</label>
-                        <input type="text" placeholder="123" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px;">
-                    </div>
-                </div>
-
-                <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-top: 30px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span>Session Cost</span>
-                        <span style="font-weight: 600;">AED 120</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid #e2e8f0;">
-                        <span style="font-weight: 600;">Total</span>
-                        <span style="font-size: 20px; font-weight: 600; color: var(--accent-purple);">AED 120</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="cta-button" onclick="confirmBooking()">Confirm & Pay</button>
         </div>
-    </div>
 
-    <!-- Therapist Dashboard -->
-    <div class="screen" id="dashboard">
-        <div class="dashboard-container reveal">
-            <div class="dashboard-header">
-                <h1>Therapist Dashboard</h1>
-                <p id="dashboardSessionSummary" style="color: #718096; font-size: 18px;">Session: The Navigators • Tuesday, 6:00 PM</p>
-            </div>
+        <!-- Therapist Dashboard -->
+        <div class="screen" id="dashboard">
+            <div class="dashboard-container reveal">
+                <div class="dashboard-header">
+                    <h1>Therapist Dashboard</h1>
+                    <p id="dashboardSessionSummary" style="color: #718096; font-size: 18px;">Session: The Navigators • Tuesday, 6:00 PM</p>
+                </div>
 
-            <div class="dashboard-grid">
-                <!-- Group Mood Heatmap -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">Group Mood Today</h3>
-                        <span id="dashboardMoodSummary" style="font-size: 12px; color: #718096;">High Anxiety, Low Energy</span>
-                    </div>
-                    <div class="mood-heatmap" id="dashboardHeatmap">
-                        <div class="heatmap-cell" style="background: #f093fb;">😰</div>
-                        <div class="heatmap-cell" style="background: #667eea;">😔</div>
-                        <div class="heatmap-cell" style="background: #f093fb;">😟</div>
-                        <div class="heatmap-cell" style="background: #ed64a6;">😓</div>
-                        <div class="heatmap-cell" style="background: #667eea;">😞</div>
-                    </div>
-                    <p id="dashboardThemes" style="color: #718096; font-size: 14px; margin-top: 15px;">
+                <div class="dashboard-grid">
+                    <!-- Group Mood Heatmap -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Group Mood Today</h3>
+                            <span id="dashboardMoodSummary" style="font-size: 12px; color: #718096;">High Anxiety, Low Energy</span>
+                        </div>
+                        <div class="mood-heatmap" id="dashboardHeatmap">
+                            <div class="heatmap-cell" style="background: #f093fb;">😰</div>
+                            <div class="heatmap-cell" style="background: #667eea;">😔</div>
+                            <div class="heatmap-cell" style="background: #f093fb;">😟</div>
+                            <div class="heatmap-cell" style="background: #ed64a6;">😓</div>
+                            <div class="heatmap-cell" style="background: #667eea;">😞</div>
+                        </div>
+                        <p id="dashboardThemes" style="color: #718096; font-size: 14px; margin-top: 15px;">
                         Today's theme: Performance pressure & burnout concerns
                     </p>
-                </div>
-
-                <!-- Participant Profiles -->
-                <div class="dashboard-card" style="grid-column: span 2;">
-                    <div class="card-header">
-                        <h3 class="card-title">Participant Quick Cards</h3>
                     </div>
-                    <ul class="participant-list" id="participantList">
-                        <li class="participant-item">
-                            <div class="participant-name">Mani • 22 • Student</div>
-                            <div class="participant-trigger">
-                                <strong>Primary concern:</strong> Coding bootcamp stress, family expectations<br>
-                                <strong>Trigger:</strong> Failure, not meeting expectations<br>
-                                <strong>Needs:</strong> Validation on hard work, permission to rest
-                            </div>
-                        </li>
-                        <li class="participant-item">
-                            <div class="participant-name">Sarah • 26 • Designer</div>
-                            <div class="participant-trigger">
-                                <strong>Primary concern:</strong> Career transition anxiety, imposter syndrome<br>
-                                <strong>Trigger:</strong> Comparison with peers<br>
-                                <strong>Needs:</strong> Confidence building, perspective on growth
-                            </div>
-                        </li>
-                        <li class="participant-item">
-                            <div class="participant-name">Alex • 24 • Engineer</div>
-                            <div class="participant-trigger">
-                                <strong>Primary concern:</strong> Burnout from startup culture<br>
-                                <strong>Trigger:</strong> "Always-on" work culture<br>
-                                <strong>Needs:</strong> Boundary setting strategies, work-life balance
-                            </div>
-                        </li>
-                    </ul>
-                </div>
 
-                <!-- Session Brief -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">Session Preparation</h3>
+                    <!-- Participant Profiles -->
+                    <div class="dashboard-card" style="grid-column: span 2;">
+                        <div class="card-header">
+                            <h3 class="card-title">Participant Quick Cards</h3>
+                        </div>
+                        <ul class="participant-list" id="participantList">
+                            <li class="participant-item">
+                                <div class="participant-name">Mani • 22 • Student</div>
+                                <div class="participant-trigger">
+                                    <strong>Primary concern:</strong> Coding bootcamp stress, family expectations<br>
+                                    <strong>Trigger:</strong> Failure, not meeting expectations<br>
+                                    <strong>Needs:</strong> Validation on hard work, permission to rest
+                            </div>
+                            </li>
+                            <li class="participant-item">
+                                <div class="participant-name">Sarah • 26 • Designer</div>
+                                <div class="participant-trigger">
+                                    <strong>Primary concern:</strong> Career transition anxiety, imposter syndrome<br>
+                                    <strong>Trigger:</strong> Comparison with peers<br>
+                                    <strong>Needs:</strong> Confidence building, perspective on growth
+                            </div>
+                            </li>
+                            <li class="participant-item">
+                                <div class="participant-name">Alex • 24 • Engineer</div>
+                                <div class="participant-trigger">
+                                    <strong>Primary concern:</strong> Burnout from startup culture<br>
+                                    <strong>Trigger:</strong> "Always-on" work culture<br>
+                                    <strong>Needs:</strong> Boundary setting strategies, work-life balance
+                            </div>
+                            </li>
+                        </ul>
                     </div>
-                    <p id="dashboardBrief" style="color: #718096; line-height: 1.8; margin-bottom: 20px;">
+
+                    <!-- Session Brief -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Session Preparation</h3>
+                        </div>
+                        <p id="dashboardBrief" style="color: #718096; line-height: 1.8; margin-bottom: 20px;">
                         This group struggles with high self-expectations and fear of failure. 
                         Common themes include family pressure, career uncertainty, and the belief 
                         that rest equals weakness.
                     </p>
-                    <button class="btn-secondary" onclick="downloadBrief()">
+                        <button class="btn-secondary" onclick="downloadBrief()">
                         📄 Download Full Brief (PDF)
                     </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <span>© 2026 Haven</span>
-            <span class="footer-links">
-                <a href="/privacy">Privacy Policy</a>
-                <a href="/terms">Terms of Service</a>
-            </span>
-        </div>
-    </footer>
-<script type="module">
-        // 1. Import Firebase Services
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <span>© 2026 Haven</span>
+                <span class="footer-links">
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                </span>
+            </div>
+        </footer>
+        <script type="module">
+            // 1. Import Firebase Services
+            import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+            import {
+                getAuth,
+                GoogleAuthProvider,
+                signInWithPopup,
+                onAuthStateChanged,
+                setPersistence,
+                browserLocalPersistence
+            } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // 2. Your Config (I kept your keys)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAjhmcZmcuui6rD5wTQDzUnXhgugkck3cw",
-            authDomain: "haven-app-4da45.firebaseapp.com",
-            projectId: "haven-app-4da45",
-            storageBucket: "haven-app-4da45.firebasestorage.app",
-            messagingSenderId: "957828596125",
-            appId: "1:957828596125:web:d70977a8d8526ec0826f74",
-            measurementId: "G-G7X8VSFF86"
-        };
+            // 2. Your Config (I kept your keys)
+            const firebaseConfig = {
+                apiKey: "AIzaSyAjhmcZmcuui6rD5wTQDzUnXhgugkck3cw",
+                authDomain: "haven-app-4da45.firebaseapp.com",
+                projectId: "haven-app-4da45",
+                storageBucket: "haven-app-4da45.firebasestorage.app",
+                messagingSenderId: "957828596125",
+                appId: "1:957828596125:web:d70977a8d8526ec0826f74",
+                measurementId: "G-G7X8VSFF86"
+            };
 
-        // 3. Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        let selectedStressors = [];
-        let selectedTimeSlot = null;
-        let matchData = null;
-        let chatTurnCount = 1;
-        let sessionStarted = false;
-        let authInFlight = false;
+            // 3. Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const provider = new GoogleAuthProvider();
+            let selectedStressors = [];
+            let selectedTimeSlot = null;
+            let matchData = null;
+            let chatTurnCount = 1;
+            let sessionStarted = false;
+            let authInFlight = false;
 
-        setPersistence(auth, browserLocalPersistence).catch((error) => {
-            console.warn("Auth persistence error:", error);
-        });
+            setPersistence(auth, browserLocalPersistence).catch((error) => {
+                console.warn("Auth persistence error:", error);
+            });
 
-        function applyMatchToUI(data) {
-            if (!data || !data.group || !data.insight) return;
-            const { group, insight } = data;
-
-            const archetype = document.getElementById('insightArchetype');
-            const title = document.getElementById('insightTitle');
-            const desc = document.getElementById('insightDescription');
-            const secondary = document.getElementById('insightSecondary');
-
-            if (archetype) archetype.textContent = insight.archetype || group.name;
-            if (title) title.textContent = insight.title;
-            if (desc) desc.textContent = insight.description;
-            if (secondary) secondary.textContent = "the good news? you're not alone in this. there are others who understand exactly what you're going through.";
-
-            const groupName = document.getElementById('groupName');
-            const groupDesc = document.getElementById('groupDescription');
-            const groupCap = document.getElementById('groupCapacity');
-            const scheduleGroup = document.getElementById('scheduleGroupName');
-
-            if (groupName) groupName.textContent = group.name;
-            if (groupDesc) groupDesc.textContent = group.description;
-            if (groupCap) groupCap.textContent = group.capacity || "6-8 members";
-            if (scheduleGroup) scheduleGroup.textContent = `Group: ${group.name}`;
-        }
-
-        // ---------------------------------------------------------
-        // AUTHENTICATION LOGIC
-        // ---------------------------------------------------------
-
-        // We attach functions to 'window' so the HTML onclick="" can see them
-        async function ensureBackendSession(user) {
-            if (authInFlight || sessionStarted) return;
-            authInFlight = true;
-            try {
-                const token = await user.getIdToken(true);
-                localStorage.setItem('userToken', token);
-
-                const response = await fetch('/api/auth/sync', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error("Backend sync failed");
-                }
-
-                await startChatSession(token);
-                sessionStarted = true;
-                showScreen('chat');
-            } finally {
-                authInFlight = false;
-            }
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user && !sessionStarted) {
-                try {
-                    await ensureBackendSession(user);
-                } catch (e) {
-                    console.error("Auto login failed", e);
-                }
-            }
-        });
-
-        window.startJourney = async function() {
-            try {
-                console.log("Starting login...");
-                if (auth.currentUser) {
-                    await ensureBackendSession(auth.currentUser);
+            function applyMatchToUI(data) {
+                if (!data || !data.group || !data.insight) 
                     return;
+                const {group, insight} = data;
+
+                const archetype = document.getElementById('insightArchetype');
+                const title = document.getElementById('insightTitle');
+                const desc = document.getElementById('insightDescription');
+                const secondary = document.getElementById('insightSecondary');
+
+                if (archetype) 
+                    archetype.textContent = insight.archetype || group.name;
+                if (title) 
+                    title.textContent = insight.title;
+                if (desc) 
+                    desc.textContent = insight.description;
+                if (secondary) 
+                    secondary.textContent = "the good news? you're not alone in this. there are others who understand exactly what you're going through.";
+                
+                const groupName = document.getElementById('groupName');
+                const groupDesc = document.getElementById('groupDescription');
+                const groupCap = document.getElementById('groupCapacity');
+                const scheduleGroup = document.getElementById('scheduleGroupName');
+
+                if (groupName) 
+                    groupName.textContent = group.name;
+                if (groupDesc) 
+                    groupDesc.textContent = group.description;
+                if (groupCap) 
+                    groupCap.textContent = group.capacity || "6-8 members";
+                if (scheduleGroup) 
+                    scheduleGroup.textContent = `Group: ${group.name}`;
                 }
+            
+            // ---------------------------------------------------------
+            // AUTHENTICATION LOGIC
+            // ---------------------------------------------------------
+
+            // We attach functions to 'window' so the HTML onclick="" can see them
+            async function ensureBackendSession(user) {
+                if (authInFlight || sessionStarted) 
+                    return;
                 authInFlight = true;
-                const result = await signInWithPopup(auth, provider);
-                await ensureBackendSession(result.user);
-
-            } catch (error) {
-                console.error("Login Error:", error);
-                alert("Login failed: " + error.message);
-            } finally {
-                authInFlight = false;
-            }
-        };
-
-        async function startChatSession(token) {
-            try {
-                const res = await fetch('/api/chat/start', {
-                    method: 'POST',
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
-                if (!res.ok) {
-                    throw new Error("Chat session start failed");
-                }
-                const data = await res.json();
-                localStorage.setItem('session_id', data.session_id);
-                chatTurnCount = 1;
-                // Replace the default bot message with the one from the backend
-                const messagesDiv = document.getElementById('messages');
-                messagesDiv.innerHTML = ''; // Clear default
-                window.addMessage('bot', data.message);
-            } catch (e) {
-                console.error("Failed to start chat session", e);
-            }
-        }
-
-        // ---------------------------------------------------------
-        // CHAT LOGIC
-        // ---------------------------------------------------------
-
-        window.sendMessage = async function() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            const token = localStorage.getItem('userToken');
-            const sessionId = localStorage.getItem('session_id');
-
-            if (message && token) {
-                const currentTurn = chatTurnCount;
-                chatTurnCount += 1;
-                // 1. Show User Message
-                window.addMessage('user', message);
-                input.value = '';
-                window.showTyping();
-
                 try {
-                    // 2. Send to Flask
-                    const res = await fetch('/api/chat/message', {
+                    const token = await user.getIdToken(true);
+                    localStorage.setItem('userToken', token);
+
+                    const response = await fetch('/api/auth/sync', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + token 
-                        },
-                        body: JSON.stringify({ 
-                            message: message,
-                            session_id: sessionId,
-                            turn_count: currentTurn
-                        })
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        }
                     });
-                    
-                    const data = await res.json();
-                    
-                    // 3. Show AI Response
-                    window.removeTyping();
-                    window.addMessage('bot', data.message);
 
-                    // Check if we should move to the next phase (Bubble Game)
-                    if (data.ready_for_next_phase) {
-                        setTimeout(() => {
-                            showScreen('bubbleGame');
-                            initBubbleGame();
-                        }, 2000);
+                    if (!response.ok) {
+                        throw new Error("Backend sync failed");
                     }
 
-                } catch (e) {
-                    console.error(e);
-                    window.removeTyping();
-                    window.addMessage('bot', "Sorry, I lost connection to the brain.");
+                    await startChatSession(token);
+                    sessionStarted = true;
+                    showScreen('chat');
+                } finally {
+                    authInFlight = false;
                 }
             }
-        };
 
-        // ---------------------------------------------------------
-        // UI HELPERS (Your Original Logic)
-        // ---------------------------------------------------------
-
-        window.handleEnter = function(event) {
-            if (event.key === 'Enter') window.sendMessage();
-        }
-
-        window.showScreen = function(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
+            onAuthStateChanged(auth, async (user) => {
+                if (user && !sessionStarted) {
+                    try {
+                        await ensureBackendSession(user);
+                    } catch (e) {
+                        console.error("Auto login failed", e);
+                    }
+                }
             });
-            document.getElementById(screenId).classList.add('active');
-            window.scrollTo(0, 0);
-        }
 
-        window.addMessage = function(role, text) {
-            const messagesDiv = document.getElementById('messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            
-            const avatar = document.createElement('div');
-            avatar.className = `message-avatar ${role}-avatar`;
-            avatar.textContent = role === 'bot' ? '🌙' : '✨';
-            
-            const content = document.createElement('div');
-            content.className = 'message-content';
-            content.innerHTML = `<p>${text}</p>`;
-            
-            if (role === 'user') {
-                messageDiv.appendChild(content);
-                messageDiv.appendChild(avatar);
-            } else {
-                messageDiv.appendChild(avatar);
-                messageDiv.appendChild(content);
+            window.startJourney = async function () {
+                try {
+                    console.log("Starting login...");
+                    if (auth.currentUser) {
+                        await ensureBackendSession(auth.currentUser);
+                        return;
+                    }
+                    authInFlight = true;
+                    const result = await signInWithPopup(auth, provider);
+                    await ensureBackendSession(result.user);
+
+                } catch (error) {
+                    console.error("Login Error:", error);
+                    alert("Login failed: " + error.message);
+                } finally {
+                    authInFlight = false;
+                }
+            };
+
+            async function startChatSession(token) {
+                try {
+                    const res = await fetch('/api/chat/start', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+                    if (!res.ok) {
+                        throw new Error("Chat session start failed");
+                    }
+                    const data = await res.json();
+                    localStorage.setItem('session_id', data.session_id);
+                    chatTurnCount = 1;
+                    // Replace the default bot message with the one from the backend
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = ''; // Clear default
+                    window.addMessage('bot', data.message);
+                } catch (e) {
+                    console.error("Failed to start chat session", e);
+                }
             }
-            
-            messagesDiv.appendChild(messageDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
 
-        window.showTyping = function() {
-            const messagesDiv = document.getElementById('messages');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message bot';
-            typingDiv.id = 'typing';
-            typingDiv.innerHTML = `
+            // ---------------------------------------------------------
+            // CHAT LOGIC
+            // ---------------------------------------------------------
+
+            window.sendMessage = async function () {
+                const input = document.getElementById('chatInput');
+                const message = input
+                    .value
+                    .trim();
+                const token = localStorage.getItem('userToken');
+                const sessionId = localStorage.getItem('session_id');
+
+                if (message && token) {
+                    const currentTurn = chatTurnCount;
+                    chatTurnCount += 1;
+                    // 1. Show User Message
+                    window.addMessage('user', message);
+                    input.value = '';
+                    window.showTyping();
+
+                    try {
+                        // 2. Send to Flask
+                        const res = await fetch('/api/chat/message', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token
+                            },
+                            body: JSON.stringify({message: message, session_id: sessionId, turn_count: currentTurn})
+                        });
+
+                        const data = await res.json();
+
+                        // 3. Show AI Response
+                        window.removeTyping();
+                        window.addMessage('bot', data.message);
+
+                        // Check if we should move to the next phase (Bubble Game)
+                        if (data.ready_for_next_phase) {
+                            setTimeout(() => {
+                                showScreen('bubbleGame');
+                                initBubbleGame();
+                            }, 2000);
+                        }
+
+                    } catch (e) {
+                        console.error(e);
+                        window.removeTyping();
+                        window.addMessage('bot', "Sorry, I lost connection to the brain.");
+                    }
+                }
+            };
+
+            // ---------------------------------------------------------
+            // UI HELPERS (Your Original Logic)
+            // ---------------------------------------------------------
+
+            window.handleEnter = function (event) {
+                if (event.key === 'Enter') 
+                    window.sendMessage();
+                }
+            
+            window.showScreen = function (screenId) {
+                document
+                    .querySelectorAll('.screen')
+                    .forEach(screen => {
+                        screen
+                            .classList
+                            .remove('active');
+                    });
+                document
+                    .getElementById(screenId)
+                    .classList
+                    .add('active');
+                window.scrollTo(0, 0);
+            }
+
+            window.addMessage = function (role, text) {
+                const messagesDiv = document.getElementById('messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${role}`;
+
+                const avatar = document.createElement('div');
+                avatar.className = `message-avatar ${role}-avatar`;
+                avatar.textContent = role === 'bot'
+                    ? '🌙'
+                    : '✨';
+
+                const content = document.createElement('div');
+                content.className = 'message-content';
+                content.innerHTML = `<p>${text}</p>`;
+
+                if (role === 'user') {
+                    messageDiv.appendChild(content);
+                    messageDiv.appendChild(avatar);
+                } else {
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(content);
+                }
+
+                messagesDiv.appendChild(messageDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            window.showTyping = function () {
+                const messagesDiv = document.getElementById('messages');
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot';
+                typingDiv.id = 'typing';
+                typingDiv.innerHTML = `
                 <div class="message-avatar bot-avatar">🌙</div>
                 <div class="message-content">
                     <div class="typing-indicator">
                         <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
                     </div>
                 </div>`;
-            messagesDiv.appendChild(typingDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        window.removeTyping = function() {
-            const typing = document.getElementById('typing');
-            if (typing) typing.remove();
-        }
-
-        // --- BUBBLE GAME & MOOD LOGIC (Kept exactly as you had it) ---
-        
-        const stressors = [
-            { text: 'Work', color: '#667eea', size: 100 },
-            { text: 'Family', color: '#f093fb', size: 120 },
-            { text: 'Money', color: '#4facfe', size: 90 },
-            { text: 'Future', color: '#ed64a6', size: 110 },
-            { text: 'Health', color: '#fee140', size: 95 },
-            { text: 'Relationships', color: '#764ba2', size: 105 }
-        ];
-
-        window.initBubbleGame = function() {
-            const arena = document.getElementById('bubbleArena');
-            arena.innerHTML = '';
-            selectedStressors = [];
-            stressors.forEach((stressor, index) => {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                bubble.textContent = stressor.text;
-                bubble.style.width = stressor.size + 'px';
-                bubble.style.height = stressor.size + 'px';
-                bubble.style.background = `linear-gradient(135deg, ${stressor.color}, ${adjustColor(stressor.color, 20)})`;
-                bubble.style.left = Math.random() * (arena.offsetWidth - stressor.size) + 'px';
-                bubble.style.top = Math.random() * (arena.offsetHeight - stressor.size) + 'px';
-                bubble.style.animationDelay = index * 0.2 + 's';
-                bubble.onclick = function() {
-                    if (!selectedStressors.includes(stressor.text)) {
-                        selectedStressors.push(stressor.text);
-                    }
-                    this.classList.add('popping');
-                    setTimeout(() => this.remove(), 500);
-                };
-                arena.appendChild(bubble);
-            });
-        }
-
-        function adjustColor(color, percent) {
-            const num = parseInt(color.replace('#', ''), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) + amt;
-            const G = (num >> 8 & 0x00FF) + amt;
-            const B = (num & 0x0000FF) + amt;
-            return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
-        }
-
-        async function sendBubbleAssessment() {
-            const token = localStorage.getItem('userToken');
-            const sessionId = localStorage.getItem('session_id');
-            if (!token || !sessionId) return;
-            try {
-                await fetch('/api/chat/assessment/bubble', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: JSON.stringify({
-                        session_id: sessionId,
-                        selected_bubbles: selectedStressors
-                    })
-                });
-            } catch (e) {
-                console.error('Bubble assessment failed', e);
+                messagesDiv.appendChild(typingDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }
-        }
 
-        async function sendMoodAssessment() {
-            const token = localStorage.getItem('userToken');
-            const sessionId = localStorage.getItem('session_id');
-            const moodValue = document.getElementById('moodSlider')?.value || 50;
-            if (!token || !sessionId) return;
-            try {
-                await fetch('/api/chat/assessment/mood', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: JSON.stringify({
-                        session_id: sessionId,
-                        mood_level: Number(moodValue)
-                    })
-                });
-            } catch (e) {
-                console.error('Mood assessment failed', e);
-            }
-        }
-
-        async function fetchMatch() {
-            const token = localStorage.getItem('userToken');
-            const sessionId = localStorage.getItem('session_id');
-            if (!token || !sessionId) return null;
-            try {
-                const res = await fetch('/api/chat/match', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: JSON.stringify({ session_id: sessionId })
-                });
-                if (!res.ok) return null;
-                return await res.json();
-            } catch (e) {
-                console.error('Match fetch failed', e);
-                return null;
-            }
-        }
-
-        window.finishBubbleGame = async function() {
-            await sendBubbleAssessment();
-            showScreen('moodGame');
-        }
-
-        window.finishMoodGame = async function() {
-            await sendMoodAssessment();
-            matchData = await fetchMatch();
-            if (matchData) applyMatchToUI(matchData);
-            showScreen('insight');
-        }
-
-        window.showMatching = function() { showScreen('matching'); }
-        window.showScheduling = function() { showScreen('scheduling'); }
-        window.showPayment = function() {
-            if (!selectedTimeSlot) {
-                alert('Please select a time slot first.');
-                return;
-            }
-            showScreen('payment');
-        }
-
-        async function loadTherapistDashboard() {
-            const token = localStorage.getItem('userToken');
-            if (!token) return;
-            const groupId = matchData?.group?.id || 'navigators';
-            try {
-                const res = await fetch(`/api/chat/therapist/dashboard/${groupId}`, {
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
-                if (!res.ok) return;
-                const data = await res.json();
-
-                const summary = document.getElementById('dashboardSessionSummary');
-                const moodSummary = document.getElementById('dashboardMoodSummary');
-                const themes = document.getElementById('dashboardThemes');
-                const participantList = document.getElementById('participantList');
-                const briefEl = document.getElementById('dashboardBrief');
-                const heatmap = document.getElementById('dashboardHeatmap');
-
-                const sessionText = `Session: ${data.group_name || data.group_name || 'Group'} • ${data.session_date || ''} ${data.session_time || ''}`.trim();
-                if (summary) summary.textContent = sessionText.replace(/\s+/g, ' ').trim();
-                if (moodSummary) moodSummary.textContent = data.mood_summary || 'Mood overview';
-                if (themes) {
-                    const themeText = (data.themes && data.themes.length)
-                        ? `Today's theme: ${data.themes.join(' • ')}`
-                        : 'Today\'s theme: group reflections';
-                    themes.textContent = themeText;
+            window.removeTyping = function () {
+                const typing = document.getElementById('typing');
+                if (typing) 
+                    typing.remove();
                 }
+            
+            // --- BUBBLE GAME & MOOD LOGIC (Kept exactly as you had it) ---
 
-                if (heatmap) {
-                    heatmap.innerHTML = '';
-                    const emojis = ['😰', '😔', '😟', '😓', '😞'];
-                    for (let i = 0; i < 5; i += 1) {
-                        const cell = document.createElement('div');
-                        cell.className = 'heatmap-cell';
-                        cell.style.background = i % 2 === 0 ? '#f093fb' : '#667eea';
-                        cell.textContent = emojis[i];
-                        heatmap.appendChild(cell);
-                    }
+            const stressors = [
+                {
+                    text: 'Work',
+                    color: '#667eea',
+                    size: 100
+                }, {
+                    text: 'Family',
+                    color: '#f093fb',
+                    size: 120
+                }, {
+                    text: 'Money',
+                    color: '#4facfe',
+                    size: 90
+                }, {
+                    text: 'Future',
+                    color: '#ed64a6',
+                    size: 110
+                }, {
+                    text: 'Health',
+                    color: '#fee140',
+                    size: 95
+                }, {
+                    text: 'Relationships',
+                    color: '#764ba2',
+                    size: 105
                 }
+            ];
 
-                if (participantList) {
-                    participantList.innerHTML = '';
-                    (data.participants || []).forEach((p) => {
-                        const item = document.createElement('li');
-                        item.className = 'participant-item';
-                        const name = document.createElement('div');
-                        name.className = 'participant-name';
-                        name.textContent = p.name || 'Member';
+            window.initBubbleGame = function () {
+                const arena = document.getElementById('bubbleArena');
+                arena.innerHTML = '';
+                selectedStressors = [];
+                stressors.forEach((stressor, index) => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    bubble.textContent = stressor.text;
+                    bubble.style.width = stressor.size + 'px';
+                    bubble.style.height = stressor.size + 'px';
+                    bubble.style.background = `linear-gradient(135deg, ${stressor.color}, ${adjustColor(stressor.color, 20)})`;
+                    bubble.style.left = Math.random() * (arena.offsetWidth - stressor.size) + 'px';
+                    bubble.style.top = Math.random() * (arena.offsetHeight - stressor.size) + 'px';
+                    bubble.style.animationDelay = index * 0.2 + 's';
+                    bubble.onclick = function () {
+                        if (!selectedStressors.includes(stressor.text)) {
+                            selectedStressors.push(stressor.text);
+                        }
+                        this
+                            .classList
+                            .add('popping');
+                        setTimeout(() => this.remove(), 500);
+                    };
+                    arena.appendChild(bubble);
+                });
+            }
 
-                        const details = document.createElement('div');
-                        details.className = 'participant-trigger';
-                        const stressors = (p.stressors || []).join(', ') || 'None listed';
-                        details.innerHTML = `
+            function adjustColor(color, percent) {
+                const num = parseInt(color.replace('#', ''), 16);
+                const amt = Math.round(2.55 * percent);
+                const R = (num >> 16) + amt;
+                const G = (num >> 8 & 0x00FF) + amt;
+                const B = (num & 0x0000FF) + amt;
+                return '#' + (
+                0x1000000 + (
+                    R < 255
+                    ? R < 1
+                        ? 0
+                        : R
+                    : 255) * 0x10000 + (
+                    G < 255
+                    ? G < 1
+                        ? 0
+                        : G
+                    : 255) * 0x100 + (
+                    B < 255
+                    ? B < 1
+                        ? 0
+                        : B
+                    : 255))
+                    .toString(16)
+                    .slice(1);
+            }
+
+            async function sendBubbleAssessment() {
+                const token = localStorage.getItem('userToken');
+                const sessionId = localStorage.getItem('session_id');
+                if (!token || !sessionId) 
+                    return;
+                try {
+                    await fetch('/api/chat/assessment/bubble', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({session_id: sessionId, selected_bubbles: selectedStressors})
+                    });
+                } catch (e) {
+                    console.error('Bubble assessment failed', e);
+                }
+            }
+
+            async function sendMoodAssessment() {
+                const token = localStorage.getItem('userToken');
+                const sessionId = localStorage.getItem('session_id');
+                const moodValue = document.getElementById('moodSlider')
+                    ?.value || 50;
+                if (!token || !sessionId) 
+                    return;
+                try {
+                    await fetch('/api/chat/assessment/mood', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({session_id: sessionId, mood_level: Number(moodValue)})
+                    });
+                } catch (e) {
+                    console.error('Mood assessment failed', e);
+                }
+            }
+
+            async function fetchMatch() {
+                const token = localStorage.getItem('userToken');
+                const sessionId = localStorage.getItem('session_id');
+                if (!token || !sessionId) 
+                    return null;
+                try {
+                    const res = await fetch('/api/chat/match', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({session_id: sessionId})
+                    });
+                    if (!res.ok) 
+                        return null;
+                    return await res.json();
+                } catch (e) {
+                    console.error('Match fetch failed', e);
+                    return null;
+                }
+            }
+
+            window.finishBubbleGame = async function () {
+                await sendBubbleAssessment();
+                showScreen('moodGame');
+            }
+
+            window.finishMoodGame = async function () {
+                await sendMoodAssessment();
+                matchData = await fetchMatch();
+                if (matchData) 
+                    applyMatchToUI(matchData);
+                showScreen('insight');
+            }
+
+            window.showMatching = function () {
+                showScreen('matching');
+            }
+            window.showScheduling = function () {
+                showScreen('scheduling');
+            }
+            window.showPayment = function () {
+                if (!selectedTimeSlot) {
+                    alert('Please select a time slot first.');
+                    return;
+                }
+                showScreen('payment');
+            }
+
+            async function loadTherapistDashboard() {
+                const token = localStorage.getItem('userToken');
+                if (!token) 
+                    return;
+                const groupId = matchData
+                    ?.group
+                        ?.id || 'navigators';
+                try {
+                    const res = await fetch(`/api/chat/therapist/dashboard/${groupId}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+                    if (!res.ok) 
+                        return;
+                    const data = await res.json();
+
+                    const summary = document.getElementById('dashboardSessionSummary');
+                    const moodSummary = document.getElementById('dashboardMoodSummary');
+                    const themes = document.getElementById('dashboardThemes');
+                    const participantList = document.getElementById('participantList');
+                    const briefEl = document.getElementById('dashboardBrief');
+                    const heatmap = document.getElementById('dashboardHeatmap');
+
+                    const sessionText = `Session: ${data.group_name || data.group_name || 'Group'} • ${data.session_date || ''} ${data.session_time || ''}`.trim();
+                    if (summary) 
+                        summary.textContent = sessionText
+                            .replace(/\s+/g, ' ')
+                            .trim();
+                    if (moodSummary) 
+                        moodSummary.textContent = data.mood_summary || 'Mood overview';
+                    if (themes) {
+                        const themeText = (data.themes && data.themes.length)
+                            ? `Today's theme: ${data
+                                .themes
+                                .join(' • ')}`
+                            : 'Today\'s theme: group reflections';
+                        themes.textContent = themeText;
+                    }
+
+                    if (heatmap) {
+                        heatmap.innerHTML = '';
+                        const emojis = ['😰', '😔', '😟', '😓', '😞'];
+                        for (let i = 0; i < 5; i += 1) {
+                            const cell = document.createElement('div');
+                            cell.className = 'heatmap-cell';
+                            cell.style.background = i % 2 === 0
+                                ? '#f093fb'
+                                : '#667eea';
+                            cell.textContent = emojis[i];
+                            heatmap.appendChild(cell);
+                        }
+                    }
+
+                    if (participantList) {
+                        participantList.innerHTML = '';
+                        (data.participants || []).forEach((p) => {
+                            const item = document.createElement('li');
+                            item.className = 'participant-item';
+                            const name = document.createElement('div');
+                            name.className = 'participant-name';
+                            name.textContent = p.name || 'Member';
+
+                            const details = document.createElement('div');
+                            details.className = 'participant-trigger';
+                            const stressors = (p.stressors || []).join(', ') || 'None listed';
+                            details.innerHTML = `
                             <strong>Primary concern:</strong> ${p.primary_concern || 'General wellness'}<br>
                             <strong>Duration:</strong> ${p.duration || 'Unknown'} • <strong>Severity:</strong> ${p.severity || 'Moderate'}<br>
                             <strong>Stressors:</strong> ${stressors}
                         `;
 
-                        item.appendChild(name);
-                        item.appendChild(details);
-                        participantList.appendChild(item);
-                    });
+                            item.appendChild(name);
+                            item.appendChild(details);
+                            participantList.appendChild(item);
+                        });
+                    }
+
+                    if (briefEl) {
+                        briefEl.textContent = (data.group_themes && data.group_themes.length)
+                            ? `This group is showing themes of ${data
+                                .group_themes
+                                .join(', ')}. Focus on validation, shared experiences, and practical boundary-setting.`
+                            : 'This group is navigating shared stress and needs validation, gentle structure, and supportive reflection.';
+                    }
+                } catch (e) {
+                    console.error('Dashboard load failed', e);
                 }
-
-                if (briefEl) {
-                    briefEl.textContent = (data.group_themes && data.group_themes.length)
-                        ? `This group is showing themes of ${data.group_themes.join(', ')}. Focus on validation, shared experiences, and practical boundary-setting.`
-                        : 'This group is navigating shared stress and needs validation, gentle structure, and supportive reflection.';
-                }
-            } catch (e) {
-                console.error('Dashboard load failed', e);
             }
-        }
 
-        window.showDashboard = function() {
-            showScreen('dashboard');
-            loadTherapistDashboard();
-        }
-
-        window.selectTimeSlot = function(element) {
-            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedTimeSlot = {
-                day: element.dataset.day,
-                time: element.dataset.time
-            };
-        }
-
-        window.confirmBooking = async function() {
-            const token = localStorage.getItem('userToken');
-            const sessionId = localStorage.getItem('session_id');
-            if (!token || !sessionId || !selectedTimeSlot) {
-                alert('Please choose a time slot first.');
-                return;
+            window.showDashboard = function () {
+                showScreen('dashboard');
+                loadTherapistDashboard();
             }
-            try {
-                const res = await fetch('/api/chat/booking/confirm', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: JSON.stringify({
-                        session_id: sessionId,
-                        time_slot: selectedTimeSlot,
-                        group_name: matchData?.group?.name || 'Your Group',
-                        group_id: matchData?.group?.id || null,
-                        price: document.getElementById('schedulePrice')?.textContent || 'AED 120 / session'
-                    })
-                });
-                if (!res.ok) {
-                    alert('Booking failed. Please try again.');
+
+            window.selectTimeSlot = function (element) {
+                document
+                    .querySelectorAll('.time-slot')
+                    .forEach(slot => slot.classList.remove('selected'));
+                element
+                    .classList
+                    .add('selected');
+                selectedTimeSlot = {
+                    day: element.dataset.day,
+                    time: element.dataset.time
+                };
+            }
+
+            window.confirmBooking = async function () {
+                const token = localStorage.getItem('userToken');
+                const sessionId = localStorage.getItem('session_id');
+                if (!token || !sessionId || !selectedTimeSlot) {
+                    alert('Please choose a time slot first.');
                     return;
                 }
-                showScreen('dashboard');
-            } catch (e) {
-                console.error('Booking failed', e);
-                alert('Booking failed. Please try again.');
+                try {
+                    const res = await fetch('/api/chat/booking/confirm', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({
+                            session_id: sessionId,
+                            time_slot: selectedTimeSlot,
+                            group_name: matchData
+                                ?.group
+                                    ?.name || 'Your Group',
+                            group_id: matchData
+                                ?.group
+                                    ?.id || null,
+                            price: document.getElementById('schedulePrice')
+                                ?.textContent || 'AED 120 / session'
+                        })
+                    });
+                    if (!res.ok) {
+                        alert('Booking failed. Please try again.');
+                        return;
+                    }
+                    showScreen('dashboard');
+                } catch (e) {
+                    console.error('Booking failed', e);
+                    alert('Booking failed. Please try again.');
+                }
             }
-        }
 
-        window.downloadBrief = async function() {
-            const token = localStorage.getItem('userToken');
-            if (!token) return;
-            try {
-                const res = await fetch('/api/chat/therapist/download-brief/navigators', {
-                    headers: { 'Authorization': 'Bearer ' + token }
+            window.downloadBrief = async function () {
+                const token = localStorage.getItem('userToken');
+                if (!token) 
+                    return;
+                try {
+                    const res = await fetch('/api/chat/therapist/download-brief/navigators', {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+                    const data = await res.json();
+                    alert(data.message || 'Brief is ready.');
+                } catch (e) {
+                    console.error('Download failed', e);
+                    alert('Could not download brief right now.');
+                }
+            }
+
+            // MOOD SLIDER
+            const moodSlider = document.getElementById('moodSlider');
+            if (moodSlider) {
+                moodSlider.addEventListener('input', function () {
+                    updateLandscape(this.value);
                 });
-                const data = await res.json();
-                alert(data.message || 'Brief is ready.');
-            } catch (e) {
-                console.error('Download failed', e);
-                alert('Could not download brief right now.');
             }
-        }
-        
-        // MOOD SLIDER
-        const moodSlider = document.getElementById('moodSlider');
-        if (moodSlider) {
-            moodSlider.addEventListener('input', function() {
-                updateLandscape(this.value);
-            });
-        }
-        function updateLandscape(value) {
-            const sky = document.getElementById('landscapeSky');
-            const sun = document.getElementById('sun');
-            if (value < 33) {
-                sky.style.background = 'linear-gradient(to bottom, #2d3561, #596275)';
-                sun.style.opacity = '0';
-            } else if (value < 66) {
-                sky.style.background = 'linear-gradient(to bottom, #a8b5c8, #c9d6df)';
-                sun.style.opacity = '0.3';
-            } else {
-                sky.style.background = 'linear-gradient(to bottom, #4facfe, #87ceeb)';
-                sun.style.opacity = '1';
+            function updateLandscape(value) {
+                const sky = document.getElementById('landscapeSky');
+                const sun = document.getElementById('sun');
+                if (value < 33) {
+                    sky.style.background = 'linear-gradient(to bottom, #2d3561, #596275)';
+                    sun.style.opacity = '0';
+                } else if (value < 66) {
+                    sky.style.background = 'linear-gradient(to bottom, #a8b5c8, #c9d6df)';
+                    sun.style.opacity = '0.3';
+                } else {
+                    sky.style.background = 'linear-gradient(to bottom, #4facfe, #87ceeb)';
+                    sun.style.opacity = '1';
+                }
             }
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>

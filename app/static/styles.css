@@ -77,7 +77,7 @@ body {
         font-size: 56px;
     }
     .hero-logo {
-        width: 360px;
+        width: 320px;
     }
     .tagline {
         font-size: 20px;
@@ -104,7 +104,7 @@ body {
         padding-top: 20px;
     }
     .hero-content {
-        padding: 24px 16px;
+        padding: 22px 18px;
     }
     .cta-button {
         width: 100%;
@@ -238,13 +238,13 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding-top: 70px;
+    padding: 48px 20px 24px;
 }
 
 .hero-content {
-    max-width: 720px;
-    width: min(720px, 92vw);
-    padding: 36px 40px;
+    max-width: 900px;
+    width: min(900px, 92vw);
+    padding: 28px 36px 32px;
     background: rgba(255, 255, 255, 0.72);
     border: 1px solid rgba(255,255,255,0.7);
     border-radius: 24px;
@@ -252,13 +252,17 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
 }
 
 .hero-logo {
-    width: 500px;
-    max-width: 90%;
+    width: min(500px, 80vw);
+    max-width: 100%;
     height: auto;
-    margin: 0 auto 16px;
+    margin: 0 auto;
     display: block;
 }
 
@@ -281,8 +285,9 @@ body {
 .tagline {
     font-size: 24px;
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    margin: 0;
     font-weight: 300;
+    max-width: 520px;
 }
 
 .cta-button {
@@ -339,7 +344,7 @@ body {
 
 .homepage-details {
     max-width: 1100px;
-    margin: -10px auto 40px;
+    margin: 24px auto 40px;
     padding: 0 20px 40px;
 }
 
@@ -432,7 +437,7 @@ body {
 
 .chat-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 28px;
 }
 
 .chat-header h2 {
@@ -590,7 +595,7 @@ body {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05));
     border-radius: 30px;
     overflow: hidden;
-    margin-bottom: 40px;
+    margin-bottom: 28px;
 }
 
 .bubble {
@@ -638,7 +643,7 @@ body {
     height: 300px;
     border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 40px;
+    margin-bottom: 28px;
     position: relative;
     transition: all 1s ease;
 }
@@ -756,7 +761,7 @@ body {
     font-size: 18px;
     color: var(--text-secondary);
     line-height: 1.8;
-    margin-bottom: 40px;
+    margin-bottom: 28px;
 }
 
 /* Group Matching */
@@ -885,7 +890,7 @@ body {
 }
 
 .dashboard-header {
-    margin-bottom: 40px;
+    margin-bottom: 28px;
 }
 
 .dashboard-header h1 {
