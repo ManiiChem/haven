@@ -1,9 +1,18 @@
 # Haven — AI‑Guided Group Matching for Mental Wellness
 # haven.mathengeinc.com
-
+`
 ## 🎥 Demo + Presentation
 - [Client demo video](https://drive.google.com/file/d/12ok1UGJ40jl6IZLkbWRn8BeLjnhu7Hl6/view?usp=sharing)
 - [Presentation (PDF)](https://drive.google.com/file/d/1CrR1t1HrqowSkskrR6Es4P3RNedIlv17/view?usp=sharing)
+
+## 📧 Email screenshots
+![Welcome email](app/email_screenshots/Screenshot%202026-02-01%20at%2016.44.13.png)
+![Group match email](app/email_screenshots/Screenshot%202026-02-01%20at%2016.45.24.png)
+![Booking confirmation email](app/email_screenshots/Screenshot%202026-02-01%20at%2016.44.59.png)
+
+
+## 🧑‍⚕️ Therapist dashboard
+![Therapist dashboard](app/therapist_dashboard.png)
 
 
 
